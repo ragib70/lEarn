@@ -33,6 +33,7 @@ import VerticalBreak from "../components/VerticalBreak";
 import { useSelector } from "react-redux";
 import {
 	ADD_COURSE,
+	COMPLETE_MODULE,
 	UPDATE_LECTURE_STATUS,
 	UserData,
 } from "../state/reducer/userData";
@@ -61,7 +62,10 @@ const CourseContent: FC = () => {
 		() => subscribedCourses.findIndex((cid) => cid === course.id) >= 0,
 		[subscribedCourses, course]
 	);
-    const [query, setQuery] = useState({enroll: {loading: false}});
+	const [query, setQuery] = useState<{
+		enroll: { loading: boolean };
+		completeModule: { ids: any[] };
+	}>({ enroll: { loading: false }, completeModule: { ids: [] } });
 
 	const [activeAccordianIndex, setActiveAccordianIndex] =
 		useState<number>(-1);
@@ -197,7 +201,10 @@ const CourseContent: FC = () => {
 									}}
 									disabled={subscribed}
 									onClick={() => {
-                                        setQuery({...query, enroll: {loading: true}})
+										setQuery({
+											...query,
+											enroll: { loading: true },
+										});
 										contract?.methods
 											.enrollCourse(course.id)
 											.send({
@@ -207,10 +214,15 @@ const CourseContent: FC = () => {
 													10000000000000000,
 											})
 											.then((res: any) => {
-                                                setQuery({...query, enroll: {loading: false}})
+												setQuery({
+													...query,
+													enroll: { loading: false },
+												});
 												dispatch({
 													type: ADD_COURSE,
-													payload: [course.id],
+													payload: {
+                                                        courses: [course.id]
+                                                    },
 												});
 												dispatch({
 													type: SET_NOTIF,
@@ -221,7 +233,10 @@ const CourseContent: FC = () => {
 												});
 											})
 											.catch((error: any) => {
-                                                setQuery({...query, enroll: {loading: false}})
+												setQuery({
+													...query,
+													enroll: { loading: false },
+												});
 												dispatch({
 													type: SET_NOTIF,
 													payload: {
@@ -451,7 +466,7 @@ const CourseContent: FC = () => {
 																		<LectureStatus
 																			value={
 																				(
-																					((progressStatus[
+																					(((progressStatus || {})[
 																						course
 																							.id
 																					] ||
@@ -466,7 +481,7 @@ const CourseContent: FC = () => {
 																					{}
 																				)
 																					.status ||
-																				"not_yet_started"
+																				((progressStatus[course.id] || {})[nextcontent.id]?.completed? 'completed' : "not_yet_started")
 																			}
 																			onChange={(
 																				value
@@ -503,8 +518,8 @@ const CourseContent: FC = () => {
 																	.greenAccent[400],
 															marginLeft: "auto",
 														}}
-														disabled={
-															(
+														disabled={ ((progressStatus[course.id] || {})[nextcontent.id]?.completed) ||
+															((
 																nextcontent.lectures ||
 																[]
 															).reduce(
@@ -541,8 +556,86 @@ const CourseContent: FC = () => {
 															(
 																nextcontent.lectures ||
 																[]
-															).length
+															).length) || (query.completeModule.ids.findIndex(id => id === nextcontent.id) >=0 )
 														}
+														onClick={() => {
+															setQuery({
+																...query,
+																completeModule:
+																	{
+																		ids: [
+																			...query
+																				.completeModule
+																				.ids,
+																			nextcontent.id,
+																		],
+																	},
+															});
+                                                            
+															contract?.methods
+																.sectionCompleted(
+																	course.id,
+																	nextcontent.id
+																)
+																.send({
+																	from: account?.code,
+																})
+																.then(() => {
+																	setQuery({
+																		...query,
+																		completeModule:
+																			{
+																				ids: query.completeModule.ids.filter(
+																					(
+																						id
+																					) =>
+																						id !==
+																						nextcontent.id
+																				),
+																			},
+																	});
+																	dispatch({
+																		type: COMPLETE_MODULE,
+																		payload:
+																			{
+																				courseId:
+																					course.id,
+																				moduleId:
+																					nextcontent.id,
+																			},
+																	});
+																	dispatch({
+																		type: SET_NOTIF,
+																		payload:
+																			{
+																				type: "info",
+																				text: `Module ${nextcontent.label} completed.`,
+																			},
+																	});
+																})
+                                                                .catch((error: any) => {
+                                                                    setQuery({
+																		...query,
+																		completeModule:
+																			{
+																				ids: query.completeModule.ids.filter(
+																					(
+																						id
+																					) =>
+																						id !==
+																						nextcontent.id
+																				),
+																			},
+																	});
+                                                                    dispatch({
+                                                                        type: SET_NOTIF,
+                                                                        payload: {
+                                                                            type: "error",
+                                                                            text: `Error while completing module: ${error.message}`,
+                                                                        },
+                                                                    });
+                                                                });
+														}}
 													>
 														Complete
 													</Button>
@@ -560,7 +653,8 @@ const CourseContent: FC = () => {
 								>
 									<ErrorOutlineIcon />{" "}
 									<span style={{ marginLeft: 5 }}>
-										Please subscribe to the course to view content.
+										Please subscribe to the course to view
+										content.
 									</span>{" "}
 								</Box>
 							)}
@@ -583,11 +677,12 @@ const LectureStatus: FC<{
 
 	return (
 		<NativeSelect
-			defaultValue={value}
+			// defaultValue={value}
 			// inputProps={{
 			// 	name: "age",
 			// 	id: "uncontrolled-native",
 			// }}
+            value={value}
 			onChange={(e) => {
 				if (onChange) onChange(e.target.value);
 			}}

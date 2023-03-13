@@ -29,6 +29,7 @@ const initialState: UserData = {
 export const UPDATE_LECTURE_STATUS = "update_lecture_status";
 export const SET_USER_DATA = "set_use_data";
 export const ADD_COURSE = "add_course";
+export const COMPLETE_MODULE = "complete_module";
 
 const userDataReducer: (
 	state: UserData,
@@ -40,9 +41,9 @@ const userDataReducer: (
 	switch (action.type) {
 		case UPDATE_LECTURE_STATUS:
 			if (
-				action.payload.courseId &&
-				action.payload.moduleId &&
-				action.payload.lectureId
+				action.payload.courseId !== undefined &&
+				action.payload.moduleId !== undefined &&
+				action.payload.lectureId !== undefined
 			) {
 				let courseProgress =
 					state.progressStatus[action.payload.courseId] || {};
@@ -56,7 +57,7 @@ const userDataReducer: (
 				module[action.payload.lectureId] = lecture;
 				courseProgress[action.payload.moduleId] = module;
 				state.progressStatus[action.payload.courseId] = courseProgress;
-                return {...state}
+				return { ...state };
 			}
 			return state;
 		case SET_USER_DATA:
@@ -64,12 +65,30 @@ const userDataReducer: (
 				...state,
 				courses: action.payload.courses || state.courses,
 				progressStatus:
-					action.payload.progressStatus || state.progressStatus,
+					{...state.progressStatus, ...(action.payload.progressStatus || state.progressStatus)},
 			};
-        case ADD_COURSE:
-            return {
-                ...state, courses: state.courses.concat(action.payload.courses || [])
-            }
+		case ADD_COURSE:
+			return {
+				...state,
+				courses: [...state.courses, ...(action.payload.courses || [])],
+			};
+		case COMPLETE_MODULE:
+            if (
+				action.payload.courseId !== undefined &&
+				action.payload.moduleId !== undefined
+			) {
+				let courseProgress =
+					state.progressStatus[action.payload.courseId] || {};
+				let module = courseProgress[action.payload.moduleId] || {};
+                module.completed = true;
+				courseProgress[action.payload.moduleId] = module;
+				state.progressStatus[action.payload.courseId] = courseProgress;
+				return { ...state };
+			}
+			return {
+				...state,
+				courses: state.courses.concat(action.payload.courses || []),
+			};
 		default:
 			return state;
 	}

@@ -98,6 +98,8 @@ const Main = () => {
 
 	useEffect(() => {
 		if (contract) {
+            // contract?.methods
+            //     .courseDatabase()                                     
 			contract?.methods
 				.getUserData()
 				.call({
@@ -107,12 +109,16 @@ const Main = () => {
 					console.log(res);
 					const progressStatus = (
 						(res.enrolledCoursesId as number[]) || []
-					).reduce((p: any, c) => {
+					).reduce((p: any, c, index) => {
 						p[c] = (
-							((res.sectionsCompleted || [])[c] as boolean[]) ||
+							((res.sectionsCompleted || [])[index] as boolean[]) ||
 							[]
-						).reduce((p: any, c, index) => {
-							p[index] = { completed: c };
+						).reduce((p: any, c2, index) => {
+                            const lectureStatus = ((courses[c] || {}).content || []).reduce((p: any, c3: any) => {
+                                p[c3.id] = {status: c2 ? 'completed' : 'not_yet_started'}
+                                return p
+                            } , {})
+							p[index] = { completed: c2, ...lectureStatus};
 							return p;
 						}, {});
 
