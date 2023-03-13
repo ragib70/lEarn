@@ -1,0 +1,255 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_courseFee",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_numSections",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_sectionDeadline",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_sectionRefundFee",
+				"type": "uint256[]"
+			}
+		],
+		"name": "createCourse",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "_courseId",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "_from",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "_destAddr",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "TransferSent",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "_creatorAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_courseId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_courseFee",
+				"type": "uint256"
+			}
+		],
+		"name": "courseCreated",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_courseId",
+				"type": "uint256"
+			}
+		],
+		"name": "enrollCourse",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_courseId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_sectionId",
+				"type": "uint256"
+			}
+		],
+		"name": "sectionCompleted",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_courseId",
+				"type": "uint256"
+			}
+		],
+		"name": "transferAmountCreator",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_courseId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_sectionId",
+				"type": "uint256"
+			}
+		],
+		"name": "calculateTimestamp",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "courseDatabase",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "creatorAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "courseFee",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "numSections",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "courseId",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getUserData",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "enrolledCoursesId",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "bool[][]",
+						"name": "sectionsCompleted",
+						"type": "bool[][]"
+					}
+				],
+				"internalType": "struct lEarn.userCustomDatabase",
+				"name": "_userInfo",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "userEnrolledDatabase",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "timeEnrolled",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

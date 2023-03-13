@@ -1,0 +1,318 @@
+[
+    {
+        "id": 0,
+        "fees": 10000000000000000,
+        "label": "JAVA Backend Development - Live",
+        "subscriptionCount": 76005,
+        "rating": 5,
+        "difficulty": "intermediate_and_Advance",
+        "thumbnail": "https://img-b.udemycdn.com/course/480x270/827692_91ad_2.jpg",
+        "description": "Our Java Backend Development course is a 9-week guided program to equip you with the right skills and make you interview-ready. Not only this get hands on experience of building web apps like e-wallet, movie ticket booking, etc.",
+        "duration": {
+            "hour": 54,
+            "minute": 20 
+        },
+        "tags": ["Job Assistance", "Capstone Projects", "Industry Experts", "Doubt Solving"],
+        "content": [
+            {
+                "id": 0,
+                "label": "Control Flow",
+                "lectures": [
+                    {
+                        "id": 0,
+                        "type": "video",
+                        "label": "Sum 3 and 5 Challenge And Using IntelliJ's Debugger",
+                        "duration": {
+                            "minute": 17,
+                            "second": 20
+                        }
+                    },
+                    {
+                        "id": 1,
+                        "type": "video",
+                        "label": "For Loop Recap",
+                        "duration": {
+                            "minute": 9,
+                            "second": 20
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "type": "problem",
+                        "label": "Sum Odd"
+                    },
+                    {
+                        "id": 3,
+                        "type": "video",
+                        "label": "The while and do while statements",
+                        "duration": {
+                            "minute": 12,
+                            "second": 26
+                        }
+                    }
+                ],
+                "quiz": [
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "String names[]={\"Anthony\", \"Leslie\",\"Malazzia\",\"Veronica\" }; \n System.out.print(names[1]);",
+                        "options": [
+                            "Anthony",
+                            "Leslie",
+                            "Malazzia",
+                            "Veronica"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 1,
+                "label": "OOP Part 1 - Inheritance",
+                "lectures": [
+                    {
+                        "id": 0,
+                        "type": "video",
+                        "label": "Introduction to Classes, Using Getter Methods",
+                        "duration": {
+                            "minute": 9,
+                            "second": 36
+                        }
+                    },
+                    {
+                        "id": 1,
+                        "type": "video",
+                        "label": "Classes, Using Setters, and Creating Objects",
+                        "duration": {
+                            "minute": 13,
+                            "second": 24
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "type": "video",
+                        "label": "Classes Challenge Exercise",
+                        "duration": {
+                            "minute": 11,
+                            "second": 59
+                        }
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "label": "List, ArrayList, LinkedList, Iterator, Autoboxing",
+                "lectures": [
+                    {
+                        "id": 0,
+                        "type": "video",
+                        "label": "Arrays, ArrayList & LinkedList - (Memory and Big O Notation)",
+                        "duration": {
+                            "minute": 11,
+                            "second": 32
+                        }
+                    },
+                    {
+                        "id": 1,
+                        "type": "problem",
+                        "label": "LinkedList Challenge"
+                    },
+                    {
+                        "id": 2,
+                        "type": "video",
+                        "label": "Autoboxing & Unboxing Challenge",
+                        "duration": {
+                            "minute": 7,
+                            "second": 29
+                        }
+                    }
+                ]
+            },
+            {
+                "id": 3,
+                "label": "Lambda Expressions",
+                "lectures": [
+                    {
+                        "id": 0,
+                        "type": "video",
+                        "label": "Lambda Expressions Introduction",
+                        "duration": {
+                            "minute": 15,
+                            "second": 33
+                        }
+                    },
+                    {
+                        "id": 1,
+                        "type": "video",
+                        "label": "Scope and Functional Programming",
+                        "duration": {
+                            "minute": 15,
+                            "second": 2
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "type": "video",
+                        "label": "Streams - Intermediate and Terminal Operations",
+                        "duration": {
+                            "minute": 13,
+                            "second": 29
+                        }
+                    }
+                ]
+            }
+        ]
+
+    },
+    {
+        "id": 1,
+        "fees": 10000000000000000,
+        "label": "React - The Complete Guide (incl Hooks, React Router, Redux)",
+        "subscriptionCount": 34793,
+        "rating": 4.6,
+        "difficulty": "intermediate",
+        "thumbnail": "https://img-b.udemycdn.com/course/480x270/1362070_b9a1_2.jpg",
+        "description": "This course is fully up-to-date with React 18 (the latest version of React)! \nIt was completely updated and re-recorded from the ground up - it teaches the very latest version of React with all the core, modern features you need to know!",
+        "duration": {
+            "hour": 48,
+            "minute": 19 
+        },
+        "tags": ["Fronend", "Industry Experts", "Doubt Solving"],
+        "content": [
+            {
+                "id": 0,
+                "label": "React Basics & Working With Components",
+                "lectures": [
+                    {
+                        "id": 0,
+                        "type": "video",
+                        "label": "Creating a new React Project",
+                        "duration": {
+                            "minute": 16,
+                            "second": 14
+                        }
+                    },
+                    {
+                        "id": 1,
+                        "type": "video",
+                        "label": "Outputting Dynamic Data & Working with Expressions in JSX",
+                        "duration": {
+                            "minute": 10,
+                            "second": 34
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "type": "video",
+                        "label": "Passing Data via \"props\"",
+                        "duration": {
+                            "minute": 12,
+                            "second": 26
+                        }
+                    },
+                    {
+                        "id": 3,
+                        "type": "problem",
+                        "label": "Exercise: Passing Data via \"props\""
+                    }
+                ]
+            },
+            {
+                "id": 1,
+                "label": "Styling React Components",
+                "lectures": [
+                    {
+                        "id": 0,
+                        "type": "video",
+                        "label": "Setting CSS Classes Dynamically",
+                        "duration": {
+                            "minute": 19,
+                            "second": 36
+                        }
+                    },
+                    {
+                        "id": 1,
+                        "type": "video",
+                        "label": "Styled Components & Dynamic Props",
+                        "duration": {
+                            "minute": 13,
+                            "second": 24
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "type": "video",
+                        "label": "Module Resources",
+                        "duration": {
+                            "minute": 23,
+                            "second": 59
+                        }
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "label": "Building Custom React Hooks",
+                "lectures": [
+                    {
+                        "id": 0,
+                        "type": "video",
+                        "label": "What are \"Custom Hooks\"?",
+                        "duration": {
+                            "minute": 1,
+                            "second": 32
+                        }
+                    },
+                    {
+                        "id": 1,
+                        "type": "video",
+                        "label": "Creating a Custom React Hook Function",
+                        "duration": {
+                            "minute": 6,
+                            "second": 29
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "type": "video",
+                        "label": "Using Custom Hooks",
+                        "duration": {
+                            "minute": 16,
+                            "second": 29
+                        }
+                    }
+                ]
+            },
+            {
+                "id": 3,
+                "label": "Advanced Redux",
+                "lectures": [
+                    {
+                        "id": 0,
+                        "type": "video",
+                        "label": "Redux & Side Effects (and Asynchronous Code)",
+                        "duration": {
+                            "minute": 5,
+                            "second": 33
+                        }
+                    },
+                    {
+                        "id": 1,
+                        "type": "video",
+                        "label": "Using useEffect with Redux",
+                        "duration": {
+                            "minute": 11,
+                            "second": 2
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "type": "problem",
+                        "label": "A Problem with useEffect()"
+                    }
+                ]
+            }
+        ]
+
+    }
+]

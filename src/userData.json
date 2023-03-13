@@ -1,0 +1,26 @@
+[
+    {
+        "account": "0x575b0Ef0DccB7225150578F7C71c5E7AD09E305C",
+        "courses": ["100"],
+        "progressStatus": {
+            "100": {
+                "100-1": {
+                    "comleted": false,
+                    "1": {
+                        "status": "in_progress",
+                        "completedDuration": {
+                            "minute": 5,
+                            "second": 23
+                        }
+                    },
+                    "2": {
+                        "status": "completed"
+                    }
+                },
+                "100-2": {
+
+                }
+            }
+        }
+    }
+]
