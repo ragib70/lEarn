@@ -16,7 +16,6 @@ import AuthProvider, { AuthContext } from "./contexts/auth";
 import { ColorModeContext, useMode } from "./contexts/theme";
 import HomePage from "./pages/home";
 import LoginPage from "./pages/login";
-import Web3 from "web3";
 import NetworkProvider, { NetworkContext } from "./contexts/network";
 import { useContext, useEffect } from "react";
 import CoursesPage from "./pages/courses";
@@ -28,6 +27,7 @@ import PushChatSupport from "./components/PushChatSupport";
 import { useDispatch } from "react-redux";
 import { SET_USER_DATA } from "./state/reducer/userData";
 import MyCoursesPage from "./pages/mycourses";
+import FuelTest from "./components/FuelTest";
 
 export const userData: any[] = require("./userData.json");
 export const courses: any[] = require("./courses.json");
@@ -79,7 +79,7 @@ function App() {
 
 const Main = () => {
 	const { account } = useContext(AuthContext);
-	const { contract } = useContext(NetworkContext);
+	const { contract, wallet } = useContext(NetworkContext);
 	const navigate = useNavigate();
 	const { path1 } = useParams();
 	const dispatch = useDispatch();
@@ -97,6 +97,7 @@ const Main = () => {
 	}, [account]);
 
 	useEffect(() => {
+        if (!wallet || wallet.provider === 'fuel') return;
 		if (contract) {
             // contract?.methods
             //     .courseDatabase()                                     
@@ -134,12 +135,14 @@ const Main = () => {
                     });
 				});
 		}
-	}, [contract]);
+	}, [contract, wallet]);
 
 	return (
 		<main className="content">
 			<AppNavBar search profile />
-			{path1 === "app" ? (
+            {
+                wallet?.provider === 'metamask' && <>
+                {path1 === "app" ? (
 				<HomePage />
 			) : path1 === "courses" ? (
 				<CoursesPage />
@@ -155,6 +158,13 @@ const Main = () => {
 				<Navigate to="/notfound" />
 			)}
 			<PushChatSupport />
+                </>
+            }
+            {
+                wallet?.provider === 'fuel' && 
+                <FuelTest />
+            }
+			
 		</main>
 	);
 };

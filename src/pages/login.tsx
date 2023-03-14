@@ -4,29 +4,31 @@ import { FC, useContext, useEffect, useMemo } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import AppNavBar from "../components/AppNavBar/AppNavBar";
 import { AuthContext } from "../contexts/auth";
+import { NetworkContext } from "../contexts/network";
 import { tokens } from "../contexts/theme";
 
 const LoginPage: FC = () => {
 	const theme: any = useTheme();
 	const colors = useMemo(() => tokens(theme.palette.mode), [theme]);
-    const {account, setAccount, ethLogin} = useContext(AuthContext);
-    const navigate = useNavigate();
+	const { account, setAccount, ethLogin } = useContext(AuthContext);
+	const navigate = useNavigate();
+	const { fuel } = useContext(NetworkContext);
 
-    useEffect(() => {
-        if (account?.code){
-            navigate('/app');
-        }
-    }, [account])
+	useEffect(() => {
+		if (account?.code) {
+			navigate("/app");
+		}
+	}, [account]);
 
 	return (
-		<main className="" style={{height: '100%'}}>
+		<main className="" style={{ height: "100%" }}>
 			<AppNavBar />
 			<Box
 				display="flex"
 				height="75%"
 				alignItems="center"
 				justifyContent="center"
-                padding={'150px 0 0 0'}
+				padding={"150px 0 0 0"}
 			>
 				<Box>
 					<Box
@@ -77,7 +79,7 @@ const LoginPage: FC = () => {
 								padding: "10px 20px 10px 20px",
 								borderRadius: "10px",
 							}}
-							onClick={ethLogin}
+							onClick={() => ethLogin()}
 						>
 							<img
 								src={`${process.env.PUBLIC_URL}/asset/metamask_icon.svg`}
@@ -87,6 +89,36 @@ const LoginPage: FC = () => {
 							<Typography color={colors.grey[100]}>
 								Metamask
 							</Typography>
+						</Button>
+
+						<Button
+							fullWidth
+							sx={{
+								"&:hover": {
+									backgroundColor: colors.blueAccent[800],
+								},
+								display: "flex",
+								alignItems: "center",
+								margin: "40px 0 0 0",
+								padding: "10px 20px 10px 20px",
+								borderRadius: "10px",
+							}}
+							onClick={() => ethLogin("fuel")}
+							disabled={!fuel}
+						>
+							<img
+								src={`${process.env.PUBLIC_URL}/asset/fuel_icon.svg`}
+								height="40px"
+								width="40px"
+							/>
+							<Typography color={colors.grey[100]}>
+								Fuel
+							</Typography>
+							{!fuel && (
+								<Typography color='red' fontSize={8}>
+									fuel wallet not connected
+								</Typography>
+							)}
 						</Button>
 					</Box>
 				</Box>

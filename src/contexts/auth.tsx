@@ -2,6 +2,8 @@ import { createContext, FC, useContext, useEffect, useState } from "react";
 import { isEmpty } from "lodash";
 import { useDispatch } from "react-redux";
 import { SET_NOTIF } from "../state/reducer/globalState";
+import { NetworkContext, WalletProvider, _abi } from "./network";
+import { Contract, Wallet } from "fuels";
 
 export type Account = { code: string; source: "storage" | "eth" };
 export const AuthContext = createContext<{
@@ -9,7 +11,7 @@ export const AuthContext = createContext<{
 	setPrvtKey: React.Dispatch<React.SetStateAction<string | undefined>>;
 	account?: Account;
 	setAccount: React.Dispatch<React.SetStateAction<Account | undefined>>;
-	ethLogin: () => Promise<void>;
+	ethLogin: (provider?: 'metamask' | 'fuel') => Promise<void>;
 }>({
 	setPrvtKey: () => {},
 	setAccount: () => {},
@@ -17,6 +19,7 @@ export const AuthContext = createContext<{
 });
 
 const AuthProvider: FC<{ children: any }> = ({ children }) => {
+    const {setWallet, wallet, setContract, fuel} = useContext(NetworkContext);
 	const [prvtKey, setPrvtKey] = useState<string | undefined>();
 	const storageAccount = localStorage.getItem("l-earn-account");
 	const [account, setAccount] = useState<Account | undefined>(
@@ -24,12 +27,16 @@ const AuthProvider: FC<{ children: any }> = ({ children }) => {
 	);
 	const dispatch = useDispatch();
 
-	const ethLogin = async () => {
+	const ethLogin = async (provider: WalletProvider = "metamask") => {
 		try {
-			window.ethereum
-				.request({
-					method: "eth_requestAccounts",
-				})
+			(provider === "metamask"
+				? window.ethereum.request({
+						method: "eth_requestAccounts",
+				  })
+				: provider === "fuel"
+				? window.fuel.connect().then(() => window.fuel.currentAccount().then((acc: string) => [acc]))
+				: new Promise<string[]>((resolve, reject) => {})
+			)
 				.then(async (accounts: string[]) => {
 					console.log(accounts);
 					if (accounts.length === 0) {
@@ -37,6 +44,7 @@ const AuthProvider: FC<{ children: any }> = ({ children }) => {
 						return null;
 					}
 					setAccount({ code: accounts[0], source: "eth" });
+                    setWallet({provider, api: provider === 'metamask' ? window.ethereum: window.fuel});
 				})
 				.catch((err: any) => {
 					dispatch({
@@ -53,9 +61,6 @@ const AuthProvider: FC<{ children: any }> = ({ children }) => {
 		}
 	};
 
-	const logout = () => {
-		setAccount(undefined);
-	};
 	useEffect(() => {
 		if (account && account.code && account.source !== "storage") {
 			localStorage.setItem("l-earn-account", account.code);
@@ -96,6 +101,18 @@ const AuthProvider: FC<{ children: any }> = ({ children }) => {
 			}
 		}
 	}, [account]);
+    useEffect(() => {
+        if (account?.code && wallet?.provider === 'fuel' && fuel){
+            fuel.getWallet(account.code).then((fuelWallet: any) => {
+                console.log('fuel wallet', fuelWallet)
+                const id = '0x3edb96c23766b8504caaff042994efa18460e7ba27f60191394a6bcf5be8d7d8';
+                const contract= new Contract(id, _abi, fuelWallet);
+                console.log('fuel contract', contract)
+                setContract(contract);
+            })
+            
+        }
+    }, [account, wallet, fuel])
 
 	useEffect(() => {
 		const handleAccountChange = (accounts: Array<string>) => {

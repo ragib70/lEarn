@@ -32,6 +32,6 @@ export const networks: { [key: string]: Network } = {
     }
 };
 
-export const allowedNetworkIds = ["80001", "3141", "5001"];
+export const allowedNetworkIds: {[key: string]: string[]} = {'metamask': ["80001", "3141", "5001"], 'fuel': [], 'default': []};
 
 export const pushApiKey = 'ZaCrOdyBNN.ajF5Igu8ppOfNkxiuiQGoXDyhTkd8sY4gG1v7aa822iVMJSnBE9zp1cXjDgUIPHC';

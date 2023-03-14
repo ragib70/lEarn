@@ -19,3 +19,21 @@ body,
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+
+.bg{
+    fill: transparent; 
+    stroke: white; 
+    stroke-width: 1.6; stroke-linecap: 
+    round; stroke-dasharray: 50.24;
+}
+
+.animated{
+    fill: transparent; 
+    stroke: red; 
+    stroke-width: 1.6; 
+    stroke-linecap: round; 
+    stroke-dasharray: 50.24; 
+    transform-origin: calc(8px) calc(8px) 0px; 
+    animation: 2.2s linear 0s infinite normal none running k-kspsgo;
+}

@@ -25,7 +25,7 @@ const style = {
 const NetworkOption: FC<{ show: boolean }> = (props) => {
 	const theme: any = useTheme();
 	const colors = useMemo(() => tokens(theme.palette.mode), [theme]);
-	const { setSelectedNetworkId, selectedNetworkId, setNetworkOption } =
+	const { setSelectedNetworkId, selectedNetworkId, setNetworkOption, wallet } =
 		useContext(NetworkContext);
 	const [error, setError] = useState<any>();
 	return (
@@ -63,7 +63,7 @@ const NetworkOption: FC<{ show: boolean }> = (props) => {
 						</Typography>
 					</Box>
 					{selectedNetworkId &&
-						allowedNetworkIds.includes(selectedNetworkId) && (
+						allowedNetworkIds[wallet?.provider || 'default'].includes(selectedNetworkId) && (
 							<IconButton
 								onClick={() => {
 									setNetworkOption(false);
@@ -76,7 +76,7 @@ const NetworkOption: FC<{ show: boolean }> = (props) => {
 				</Box>
 				<Box sx={{ px: 4, py: 3 }}>
 					<div hidden={!window.ethereum}>
-						{allowedNetworkIds.map((id, index) => (
+						{allowedNetworkIds[wallet?.provider || 'default'].map((id, index) => (
 							<Button
 								key={`network-option-${id}`}
 								fullWidth
