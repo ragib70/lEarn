@@ -79,28 +79,23 @@ function App() {
 
 const Main = () => {
 	const { account } = useContext(AuthContext);
-	const { contract, wallet } = useContext(NetworkContext);
+	const { contract, wallet, setContract, setWallet } = useContext(NetworkContext);
 	const navigate = useNavigate();
 	const { path1 } = useParams();
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (!account?.code) {
+            setContract(undefined);
+            setWallet(undefined);
 			navigate("/login");
 			return;
 		}
-
-		// dispatch({
-		//     type: SET_USER_DATA,
-		//     payload: userData.find(c => c.account.toLowerCase() === account.code.toLowerCase()) || {}
-		// })
 	}, [account]);
 
 	useEffect(() => {
         if (!wallet || wallet.provider === 'fuel') return;
-		if (contract) {
-            // contract?.methods
-            //     .courseDatabase()                                     
+		if (contract) {                                    
 			contract?.methods
 				.getUserData()
 				.call({

@@ -23,17 +23,30 @@ body,
 
 .bg{
     fill: transparent; 
-    stroke: white; 
-    stroke-width: 1.6; stroke-linecap: 
-    round; stroke-dasharray: 50.24;
+    stroke: #4a4646; 
+    stroke-width: 1.6; 
+    stroke-linecap: round; 
+    stroke-dasharray: 30; 
+    transform-origin: calc(8px) calc(8px) 0px; 
+    animation:rotation 1s linear infinite normal;
 }
 
 .animated{
     fill: transparent; 
-    stroke: red; 
+    opacity: 0.5;
+    stroke: white; 
     stroke-width: 1.6; 
     stroke-linecap: round; 
-    stroke-dasharray: 50.24; 
+    stroke-dasharray: 30; 
     transform-origin: calc(8px) calc(8px) 0px; 
-    animation: 2.2s linear 0s infinite normal none running k-kspsgo;
+    animation:rotation 0.5s linear infinite normal;
 }
+
+@keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }

@@ -51,19 +51,20 @@ const FuelTest: FC = () => {
 				disabled={loading}
 			>
 				{loading ? (
-					<Box display="flex">
-						<img
+					<Box display='flex' justifyItems='center'>
+						{/* <img
 							src={`${process.env.PUBLIC_URL}/asset/spinner1.svg`}
 							width="16px"
 							height="16px"
                             style={{margin: '2px 5px 0 0'}}
-						/>
-						{/* <svg
+						/> */}
+						<svg
 							version="1.1"
 							xmlns="http://www.w3.org/2000/svg"
-							className="PJLV fuel_spinner c-hLmDBj"
 							viewBox="0 0 16 16"
-							// style={{x: 0, y: 0}}
+                            height={16}
+                            width={16}
+							style={{margin: '2px 5px 0 0'}}
 						>
 							<circle
 								cx="8"
@@ -71,13 +72,13 @@ const FuelTest: FC = () => {
 								r="6.4"
 								className="bg"
 							></circle>
-							<circle
+							{/* <circle
 								cx="8"
 								cy="8"
 								r="6.4"
 								className="animated"
-							></circle>
-						</svg> */}
+							></circle> */}
+						</svg>
 						Loading...
 					</Box>
 				) : (
