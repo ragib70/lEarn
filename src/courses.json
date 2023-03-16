@@ -62,7 +62,60 @@
                             "Leslie",
                             "Malazzia",
                             "Veronica"
-                        ]
+                        ],
+                        "answer": "Leslie"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statementImage": "question-0-1-2.png",
+                        "options": [
+                            "New York",
+                            "California",
+                            "Texas",
+                            "Nothing"
+                        ],
+                        "answer": "New York"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "Which one of these control flow statements have three parameters to it?",
+                        "options": [
+                            "switch",
+                            "while",
+                            "do-while",
+                            "for"
+                        ],
+                        "answer": "for"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "How do you write a Greater than or equal to Relational operator",
+                        "options": [
+                            "<=",
+                            "=<",
+                            ">=",
+                            "=>"
+                        ],
+                        "answer": ">="
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "Base on the code block below what will print to the console? \n int x=10;\n do {System.out.println(x*2);\n x--;}\n while(x>10);",
+                        "options": [
+                            "20",
+                            "infinite loop",
+                            "200",
+                            "20000000"
+                        ],
+                        "answer": "20"
                     }
                 ]
             },
@@ -96,6 +149,73 @@
                             "minute": 11,
                             "second": 59
                         }
+                    }
+                ],
+                "quiz": [
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "String names[]={\"Anthony\", \"Leslie\",\"Malazzia\",\"Veronica\" }; \n System.out.print(names[1]);",
+                        "options": [
+                            "Anthony",
+                            "Leslie",
+                            "Malazzia",
+                            "Veronica"
+                        ],
+                        "answer": "Leslie"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statementImage": "question-0-1-2.png",
+                        "options": [
+                            "New York",
+                            "California",
+                            "Texas",
+                            "Nothing"
+                        ],
+                        "answer": "New York"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "Which one of these control flow statements have three parameters to it?",
+                        "options": [
+                            "switch",
+                            "while",
+                            "do-while",
+                            "for"
+                        ],
+                        "answer": "for"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "How do you write a Greater than or equal to Relational operator",
+                        "options": [
+                            "<=",
+                            "=<",
+                            ">=",
+                            "=>"
+                        ],
+                        "answer": ">="
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "Base on the code block below what will print to the console? \n int x=10;\n do {System.out.println(x*2);\n x--;}\n while(x>10);",
+                        "options": [
+                            "20",
+                            "infinite loop",
+                            "200",
+                            "20000000"
+                        ],
+                        "answer": "20"
                     }
                 ]
             },
@@ -158,6 +278,47 @@
                             "minute": 13,
                             "second": 29
                         }
+                    }
+                ],
+                "quiz": [
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "Which one of these control flow statements have three parameters to it?",
+                        "options": [
+                            "switch",
+                            "while",
+                            "do-while",
+                            "for"
+                        ],
+                        "answer": "for"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "How do you write a Greater than or equal to Relational operator",
+                        "options": [
+                            "<=",
+                            "=<",
+                            ">=",
+                            "=>"
+                        ],
+                        "answer": ">="
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "Base on the code block below what will print to the console? \n int x=10;\n do {System.out.println(x*2);\n x--;}\n while(x>10);",
+                        "options": [
+                            "20",
+                            "infinite loop",
+                            "200",
+                            "20000000"
+                        ],
+                        "answer": "20"
                     }
                 ]
             }

@@ -19,14 +19,28 @@ import {
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { height } from "@mui/system";
-import { FC, useCallback, useContext, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import {
+	FC,
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
+import {
+	Route,
+	Routes,
+	useNavigate,
+	useParams,
+	useSearchParams,
+} from "react-router-dom";
 import Header from "../components/Header";
 import { tokens } from "../contexts/theme";
 import StarOutlinedIcon from "@mui/icons-material/StarOutlined";
 import { isEmpty, startCase } from "lodash";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CodeIcon from "@mui/icons-material/Code";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import VerticalBreak from "../components/VerticalBreak";
@@ -44,8 +58,19 @@ import { AuthContext } from "../contexts/auth";
 import React from "react";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { SET_NOTIF } from "../state/reducer/globalState";
+import InfoBadge from "../components/InfoBadge";
+import QuizPage from "./quiz";
 
 const CourseContent: FC = () => {
+	return (
+		<Routes>
+			<Route path="quiz/:path3" element={<QuizPage />} />
+			<Route path="" element={<CourseContentBase />} />
+		</Routes>
+	);
+};
+
+const CourseContentBase: FC = () => {
 	const theme: any = useTheme();
 	const colors = useMemo(() => tokens(theme.palette.mode), [theme]);
 	const { contract } = useContext(NetworkContext);
@@ -55,6 +80,7 @@ const CourseContent: FC = () => {
 		() => courses.find((c) => `${c.id}` === path2),
 		[path2]
 	);
+	const [searchParams, setSearchParams] = useSearchParams();
 	const { courses: subscribedCourses, progressStatus } = useSelector(
 		(state: any) => state.userData as UserData
 	);
@@ -70,7 +96,7 @@ const CourseContent: FC = () => {
 	const [activeAccordianIndex, setActiveAccordianIndex] =
 		useState<number>(-1);
 
-	const handleChange = useCallback(
+	const handleAccordianChange = useCallback(
 		(expanded: boolean, index: number) => {
 			if (expanded) setActiveAccordianIndex(index);
 			else if (activeAccordianIndex === index)
@@ -79,9 +105,24 @@ const CourseContent: FC = () => {
 		[activeAccordianIndex]
 	);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		setActiveAccordianIndex(
+			parseInt(searchParams.get("activeContent") || "0")
+		);
+	}, [searchParams]);
 
 	return (
 		<Box m="20px" height="calc(100% - 7em)" position="relative">
+			<Button
+				variant="contained"
+				sx={{ mb: 2 }}
+				onClick={() => navigate(-1)}
+			>
+				<ArrowBackIcon />
+				Back
+			</Button>
 			{isEmpty(course) && (
 				<Box padding={2} display="flex" alignItems="center">
 					<ErrorOutlineIcon />{" "}
@@ -221,8 +262,8 @@ const CourseContent: FC = () => {
 												dispatch({
 													type: ADD_COURSE,
 													payload: {
-                                                        courses: [course.id]
-                                                    },
+														courses: [course.id],
+													},
 												});
 												dispatch({
 													type: SET_NOTIF,
@@ -265,7 +306,7 @@ const CourseContent: FC = () => {
 												activeAccordianIndex === index
 											}
 											onChange={(e, ex) =>
-												handleChange(ex, index)
+												handleAccordianChange(ex, index)
 											}
 											sx={{
 												backgroundColor:
@@ -285,6 +326,15 @@ const CourseContent: FC = () => {
 												<Box>
 													<Typography variant="h5">
 														Module {index + 1}
+														{(progressStatus[
+															course.id
+														] || {})[nextcontent.id]
+															?.completed && (
+															<InfoBadge
+																text="Completed"
+																color="success"
+															/>
+														)}
 													</Typography>
 													<Typography variant="h4">
 														{nextcontent.label}
@@ -461,12 +511,16 @@ const CourseContent: FC = () => {
 																				?.minute ||
 																			0
 																		} minutes`}
+																		sx={{
+																			cursor: "pointer",
+																		}}
 																	/>
 																	<Box ml="auto">
 																		<LectureStatus
 																			value={
 																				(
-																					(((progressStatus || {})[
+																					(((progressStatus ||
+																						{})[
 																						course
 																							.id
 																					] ||
@@ -481,7 +535,17 @@ const CourseContent: FC = () => {
 																					{}
 																				)
 																					.status ||
-																				((progressStatus[course.id] || {})[nextcontent.id]?.completed? 'completed' : "not_yet_started")
+																				((progressStatus[
+																					course
+																						.id
+																				] ||
+																					{})[
+																					nextcontent
+																						.id
+																				]
+																					?.completed
+																					? "completed"
+																					: "not_yet_started")
 																			}
 																			onChange={(
 																				value
@@ -502,6 +566,17 @@ const CourseContent: FC = () => {
 																					}
 																				);
 																			}}
+																			disabled={
+																				(progressStatus[
+																					course
+																						.id
+																				] ||
+																					{})[
+																					nextcontent
+																						.id
+																				]
+																					?.completed
+																			}
 																		/>
 																	</Box>
 																</ListItem>
@@ -510,16 +585,42 @@ const CourseContent: FC = () => {
 													)}
 												</List>
 												<Box display="flex" mt={3}>
+                                                    <Box marginLeft='auto'></Box>
+													{nextcontent.quiz && (
+														<Button
+															variant="outlined"
+															sx={{
+																marginRight:
+																	"10px",
+																backgroundColor:
+																	colors
+																		.primary[400],
+																color: colors
+																	.primary[100],
+															}}
+															onClick={() => {
+																navigate(
+																	`quiz/${nextcontent.id}`
+																);
+															}}
+														>
+															Take quiz
+														</Button>
+													)}
 													<Button
 														variant="contained"
 														sx={{
 															backgroundColor:
 																colors
 																	.greenAccent[400],
-															marginLeft: "auto",
 														}}
-														disabled={ ((progressStatus[course.id] || {})[nextcontent.id]?.completed) ||
-															((
+														disabled={
+															(progressStatus[
+																course.id
+															] || {})[
+																nextcontent.id
+															]?.completed ||
+															(
 																nextcontent.lectures ||
 																[]
 															).reduce(
@@ -553,10 +654,24 @@ const CourseContent: FC = () => {
 																},
 																0
 															) !==
-															(
-																nextcontent.lectures ||
-																[]
-															).length) || (query.completeModule.ids.findIndex(id => id === nextcontent.id) >=0 )
+																(
+																	nextcontent.lectures ||
+																	[]
+																).length ||
+															query.completeModule.ids.findIndex(
+																(id) =>
+																	id ===
+																	nextcontent.id
+															) >= 0 ||
+															(nextcontent.quiz &&
+																!((progressStatus[
+																	course.id
+																] || {})[
+																	nextcontent
+																		.id
+																]?.score
+																	?.points >
+																	0))
 														}
 														onClick={() => {
 															setQuery({
@@ -571,7 +686,7 @@ const CourseContent: FC = () => {
 																		],
 																	},
 															});
-                                                            
+
 															contract?.methods
 																.sectionCompleted(
 																	course.id,
@@ -613,28 +728,37 @@ const CourseContent: FC = () => {
 																			},
 																	});
 																})
-                                                                .catch((error: any) => {
-                                                                    setQuery({
-																		...query,
-																		completeModule:
+																.catch(
+																	(
+																		error: any
+																	) => {
+																		setQuery(
 																			{
-																				ids: query.completeModule.ids.filter(
-																					(
-																						id
-																					) =>
-																						id !==
-																						nextcontent.id
-																				),
-																			},
-																	});
-                                                                    dispatch({
-                                                                        type: SET_NOTIF,
-                                                                        payload: {
-                                                                            type: "error",
-                                                                            text: `Error while completing module: ${error.message}`,
-                                                                        },
-                                                                    });
-                                                                });
+																				...query,
+																				completeModule:
+																					{
+																						ids: query.completeModule.ids.filter(
+																							(
+																								id
+																							) =>
+																								id !==
+																								nextcontent.id
+																						),
+																					},
+																			}
+																		);
+																		dispatch(
+																			{
+																				type: SET_NOTIF,
+																				payload:
+																					{
+																						type: "error",
+																						text: `Error while completing module: ${error.message}`,
+																					},
+																			}
+																		);
+																	}
+																);
 														}}
 													>
 														Complete
@@ -671,7 +795,8 @@ export default CourseContent;
 const LectureStatus: FC<{
 	value: string;
 	onChange?: (value: string) => void;
-}> = ({ value, onChange }) => {
+	disabled?: boolean;
+}> = ({ value, onChange, disabled }) => {
 	const theme: any = useTheme();
 	const colors = useMemo(() => tokens(theme.palette.mode), [theme]);
 
@@ -682,7 +807,7 @@ const LectureStatus: FC<{
 			// 	name: "age",
 			// 	id: "uncontrolled-native",
 			// }}
-            value={value}
+			value={value}
 			onChange={(e) => {
 				if (onChange) onChange(e.target.value);
 			}}
@@ -700,6 +825,7 @@ const LectureStatus: FC<{
 				// borderRadius: "10px",
 				// color: "white",
 			}}
+			disabled={disabled}
 		>
 			<option value={"not_yet_started"}>Not Yet Started</option>
 			<option value={"in_progress"}>In Progres</option>

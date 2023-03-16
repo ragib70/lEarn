@@ -10,13 +10,13 @@ import CourseCard from "../components/CourseCard";
 import Header from "../components/Header";
 import { PageContext } from "../contexts/page";
 import { tokens } from "../contexts/theme";
-import CourseContent from "./courseContent";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import CourseContent from "./courseContent";
 
 const CoursesPage: FC = () => {
 	return (
 		<Routes>
-			<Route path=":path2" element={<CourseContent />} />
+			<Route path=":path2/*" element={<CourseContent />} />
 			<Route path="" element={<Base />} />
 		</Routes>
 	);

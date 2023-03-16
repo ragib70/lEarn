@@ -12,7 +12,7 @@ import { AuthContext } from "../contexts/auth";
 import { PageContext } from "../contexts/page";
 import { tokens } from "../contexts/theme";
 import { UserData } from "../state/reducer/userData";
-import CourseContent from "./courseContent";
+import CourseContentBase from "./courseContent";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 export const courses: any[] = require("../courses.json");
@@ -20,7 +20,7 @@ export const courses: any[] = require("../courses.json");
 const MyCoursesPage: FC = () => {
 	return (
 		<Routes>
-			<Route path=":path2" element={<CourseContent />} />
+			<Route path=":path2" element={<CourseContentBase />} />
 			<Route path="" element={<Base />} />
 		</Routes>
 	);

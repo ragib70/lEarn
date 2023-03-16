@@ -19,6 +19,7 @@ export interface UserDataActionPayload {
 	completedDuration?: { minute: number; second: number };
 	courses?: string[];
 	progressStatus?: any;
+    score?: {points: number, total: number}
 }
 
 const initialState: UserData = {
@@ -30,6 +31,7 @@ export const UPDATE_LECTURE_STATUS = "update_lecture_status";
 export const SET_USER_DATA = "set_use_data";
 export const ADD_COURSE = "add_course";
 export const COMPLETE_MODULE = "complete_module";
+export const UPDATE_QUIZ_SCORE = "update_quiz_score";
 
 const userDataReducer: (
 	state: UserData,
@@ -89,6 +91,23 @@ const userDataReducer: (
 				...state,
 				courses: state.courses.concat(action.payload.courses || []),
 			};
+        case UPDATE_QUIZ_SCORE:
+            if (
+                action.payload.courseId !== undefined &&
+                action.payload.moduleId !== undefined
+            ) {
+                let courseProgress =
+                    state.progressStatus[action.payload.courseId] || {};
+                let module = courseProgress[action.payload.moduleId] || {};
+                module.score = action.payload.score;
+                courseProgress[action.payload.moduleId] = module;
+                state.progressStatus[action.payload.courseId] = courseProgress;
+                return { ...state };
+            }
+            return {
+                ...state,
+                courses: state.courses.concat(action.payload.courses || []),
+            };
 		default:
 			return state;
 	}
