@@ -115,7 +115,7 @@ const LoginPage: FC = () => {
 								Fuel
 							</Typography>
 							{!fuel && (
-								<Typography color='red' fontSize={8}>
+								<Typography color='red' fontSize={8} marginLeft={2}>
 									fuel wallet not connected
 								</Typography>
 							)}

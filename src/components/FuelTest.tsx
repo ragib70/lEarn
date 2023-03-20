@@ -22,7 +22,7 @@ const FuelTest: FC = () => {
 				color="success"
 				onClick={() => {
 					setLoading(true);
-
+                    console.log(contract)
 					contract.functions
 						.increment()
 						.txParams({ gasPrice: 1 })
