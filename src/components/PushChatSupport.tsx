@@ -23,7 +23,7 @@ const PushChatSupport: FC = () => {
 			{account?.code && (
 				<Chat
 					account={account.code} //user address
-					supportAddress="0x7Fc7667e27cf6b7D4ee331e05865Bd8bfBC3Df10" //support address
+					supportAddress="0x9333576376701Bb6D5412DB6D068eFF6E0e310Fd" //support address
 					apiKey={pushApiKey}
 					env={ENV.PROD}
 				/>

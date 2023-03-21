@@ -52,7 +52,7 @@ const NetworkProvider: FC<{ children: any }> = ({ children }) => {
 
 	useEffect(() => {
 		// method: net_version, would give decimal string for chaninId
-		if (wallet?.provider === "fuel" && !fuel) {
+		if (wallet?.provider === "fuel") {
             setSelectedNetworkId('fuel0')
 			return;
 		}
