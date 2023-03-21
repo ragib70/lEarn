@@ -12,7 +12,7 @@ import { tokens } from "../contexts/theme";
 const OverlayLoaderStyled = styled("div")(({ theme }) => ({
 	zIndex: 11,
 	position: "fixed",
-	left: "40%",
+	left: "50%",
 	top: theme.spacing(9),
 }));
 

@@ -59,7 +59,7 @@ const Base: FC = () => {
 				alignItems="center"
 			>
 				<Header
-					title="COURSES"
+					title="MY COURSES"
 					subtitle="Overview and subscribe some of the coolest courses."
 				/>
 			</Box>

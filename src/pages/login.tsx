@@ -16,7 +16,7 @@ const LoginPage: FC = () => {
 
 	useEffect(() => {
 		if (account?.code) {
-			navigate("/app");
+			navigate("/mycourses");
 		}
 	}, [account]);
 

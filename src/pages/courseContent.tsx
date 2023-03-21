@@ -334,7 +334,7 @@ const CourseContentBase: FC = () => {
 												.enroll_course(course.id)
 												.callParams({
 													forward: {
-														amount: 10000000,
+														amount: course.fuelFees,
 														assetId: NativeAssetId,
 													},
 												})

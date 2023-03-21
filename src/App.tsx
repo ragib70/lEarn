@@ -94,6 +94,13 @@ const Main = () => {
 		if (!account?.code) {
 			setContract(undefined);
 			setWallet(undefined);
+            dispatch({
+                type: SET_USER_DATA,
+                payload: {
+                    courses: [],
+                    progressStatus: {}
+                }
+            })
 			navigate("/login");
 			return;
 		}
@@ -143,6 +150,13 @@ const Main = () => {
 							...transformFuelResponse(res.value)
 						},
 					});
+                    dispatch({
+                        type: SET_NOTIF,
+                        payload: {
+                            type: 'info',
+                            text: "User data loaded"
+                        }
+                    })
                     setUserDataQuery({loading: false});
                 })
                 .catch(onUserDataCallFailure);
@@ -160,6 +174,13 @@ const Main = () => {
 							...transformMetamaskResponse(res)
 						},
 					});
+                    dispatch({
+                        type: SET_NOTIF,
+                        payload: {
+                            type: 'info',
+                            text: "User data loaded"
+                        }
+                    })
                     setUserDataQuery({loading: false});
 				})
                 .catch(onUserDataCallFailure);
