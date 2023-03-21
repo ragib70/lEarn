@@ -95,7 +95,7 @@ const CourseContentBase: FC = () => {
 	const { query, setQuery } = useContext(CourseContentContext);
 	const { contract, wallet } = useContext(NetworkContext);
 	const { account } = useContext(AuthContext);
-	const { searchText } = useContext(PageContext);
+	const { searchText, userDataQuery } = useContext(PageContext);
 	const { path2 } = useParams();
 	const course = useMemo(
 		() => courses.find((c) => `${c.id}` === path2),
@@ -316,7 +316,9 @@ const CourseContentBase: FC = () => {
 										fontSize: 16,
 									}}
 									disabled={
-										subscribed || query.enroll.loading
+										subscribed ||
+										query.enroll.loading ||
+										userDataQuery.loading
 									}
 									onClick={() => {
 										setQuery({
@@ -415,105 +417,13 @@ const CourseContentBase: FC = () => {
 														{nextcontent.label}
 													</Typography>
 												</Box>
-												<Typography
-													ml="auto"
-													mr={2}
-													py={2}
-												>
-													<span>
-														{
-															(
-																nextcontent.lectures ||
-																[]
-															).length
-														}{" "}
-														Lectures
-													</span>
-													<VerticalBreak />
-													<span>
-														{
-															(
-																nextcontent.lectures ||
-																[]
-															).reduce(
-																(
-																	p: any,
-																	c: any
-																) => {
-																	if (
-																		c.duration
-																	) {
-																		let tm =
-																			(c
-																				.duration
-																				.minute ||
-																				0) +
-																			p
-																				.duration
-																				.minute;
-																		let ts =
-																			(c
-																				.duration
-																				.second ||
-																				0) +
-																			p
-																				.duration
-																				.second;
-
-																		tm +=
-																			Math.floor(
-																				ts /
-																					60
-																			);
-																		ts =
-																			ts %
-																			60;
-
-																		p = {
-																			formatted: `${
-																				p
-																					.duration
-																					.hour +
-																				Math.floor(
-																					tm /
-																						60
-																				)
-																			} hours ${
-																				tm %
-																				60
-																			} minutes`,
-																			duration:
-																				{
-																					hour:
-																						p
-																							.duration
-																							.hour +
-																						Math.floor(
-																							tm /
-																								60
-																						),
-																					minute:
-																						tm %
-																						60,
-																					second: ts,
-																				},
-																		};
-																	}
-																	return p;
-																},
-																{
-																	formatted:
-																		"0 hours",
-																	duration: {
-																		hour: 0,
-																		minute: 0,
-																		second: 0,
-																	},
-																}
-															).formatted
+												<Box marginLeft="auto">
+													<ContentHeaderStats
+														courseContent={
+															nextcontent
 														}
-													</span>
-												</Typography>
+													/>
+												</Box>
 											</AccordionSummary>
 											<AccordionDetails
 												sx={{
@@ -757,7 +667,7 @@ const ContentFooter: FC<{ course: any; courseContent: any }> = (props) => {
 	const { courses: subscribedCourses, progressStatus } = useSelector(
 		(state: any) => state.userData as UserData
 	);
-	const { contract } = useContext(NetworkContext);
+	const { contract, wallet } = useContext(NetworkContext);
 	const { account } = useContext(AuthContext);
 	const topicCompleted = useMemo(
 		() =>
@@ -782,9 +692,59 @@ const ContentFooter: FC<{ course: any; courseContent: any }> = (props) => {
 				?.score?.points > 0,
 		[props, progressStatus]
 	);
+
+	const onCompleteSuccess = useCallback((res: any) => {
+        console.log(res)
+		setQuery({
+			...query,
+			completeModule: {
+				ids: query.completeModule.ids.filter(
+					(id) => id !== props.courseContent.id
+				),
+			},
+		});
+		dispatch({
+			type: COMPLETE_MODULE,
+			payload: {
+				courseId: props.course.id,
+				moduleId: props.courseContent.id,
+			},
+		});
+		dispatch({
+			type: SET_NOTIF,
+			payload: {
+				type: "info",
+				text: `Module ${props.courseContent.label} completed.`,
+			},
+		});
+	}, [props]);
+
+	const onCompleteFailure = useCallback(
+		(error: any) => {
+			setQuery({
+				...query,
+				completeModule: {
+					ids: query.completeModule.ids.filter(
+						(id) => id !== props.courseContent.id
+					),
+				},
+			});
+			dispatch({
+				type: SET_NOTIF,
+				payload: {
+					type: "error",
+					text: `Error while completing module: ${error.message}`,
+				},
+			});
+		},
+		[props]
+	);
+
 	return (
 		<Box display="flex" mt={3} alignItems="center">
-			{!quizTaken && (
+			{!quizTaken && !((progressStatus[props.course.id] || {})[
+							props.courseContent.id
+						] || {}).completed && (
 				<Typography display="flex" alignItems="center">
 					<ErrorOutlineIcon />{" "}
 					<span style={{ marginLeft: 5 }}>
@@ -792,7 +752,9 @@ const ContentFooter: FC<{ course: any; courseContent: any }> = (props) => {
 					</span>{" "}
 				</Typography>
 			)}
-			{quizTaken && topicCompleted && (
+			{quizTaken && topicCompleted && !((progressStatus[props.course.id] || {})[
+							props.courseContent.id
+						] || {}).completed && (
 				<Typography display="flex" alignItems="center">
 					<ErrorOutlineIcon />{" "}
 					<span style={{ marginLeft: 5 }}>
@@ -845,59 +807,74 @@ const ContentFooter: FC<{ course: any; courseContent: any }> = (props) => {
 						},
 					});
 
-					contract?.methods
-						.sectionCompleted(
-							props.course.id,
-							props.courseContent.id
-						)
-						.send({
-							from: account?.code,
-						})
-						.then(() => {
-							setQuery({
-								...query,
-								completeModule: {
-									ids: query.completeModule.ids.filter(
-										(id) => id !== props.courseContent.id
-									),
-								},
-							});
-							dispatch({
-								type: COMPLETE_MODULE,
-								payload: {
-									courseId: props.course.id,
-									moduleId: props.courseContent.id,
-								},
-							});
-							dispatch({
-								type: SET_NOTIF,
-								payload: {
-									type: "info",
-									text: `Module ${props.courseContent.label} completed.`,
-								},
-							});
-						})
-						.catch((error: any) => {
-							setQuery({
-								...query,
-								completeModule: {
-									ids: query.completeModule.ids.filter(
-										(id) => id !== props.courseContent.id
-									),
-								},
-							});
-							dispatch({
-								type: SET_NOTIF,
-								payload: {
-									type: "error",
-									text: `Error while completing module: ${error.message}`,
-								},
-							});
-						});
+					if (wallet?.provider === "fuel") {
+						contract.functions
+							.section_completed(props.course.id, props.courseContent.id)
+							.txParams({ gasPrice: 1 })
+							.call()
+							.then(onCompleteSuccess)
+							.catch(onCompleteFailure);
+					} else if (wallet?.provider === "metamask") {
+						contract?.methods
+							.sectionCompleted(
+								props.course.id,
+								props.courseContent.id
+							)
+							.send({
+								from: account?.code,
+							})
+							.then(onCompleteSuccess)
+							.catch(onCompleteFailure);
+					}
 				}}
 			>
 				Complete
 			</Button>
 		</Box>
+	);
+};
+
+const ContentHeaderStats: FC<{ courseContent: any }> = (props) => {
+	const formattedTime = useMemo(
+		() =>
+			(props.courseContent.lectures || []).reduce(
+				(p: any, c: any) => {
+					if (c.duration) {
+						let tm = (c.duration.minute || 0) + p.duration.minute;
+						let ts = (c.duration.second || 0) + p.duration.second;
+
+						tm += Math.floor(ts / 60);
+						ts = ts % 60;
+
+						p = {
+							formatted: `${
+								p.duration.hour + Math.floor(tm / 60)
+							} hours ${tm % 60} minutes`,
+							duration: {
+								hour: p.duration.hour + Math.floor(tm / 60),
+								minute: tm % 60,
+								second: ts,
+							},
+						};
+					}
+					return p;
+				},
+				{
+					formatted: "0 hours",
+					duration: {
+						hour: 0,
+						minute: 0,
+						second: 0,
+					},
+				}
+			).formatted,
+		[props]
+	);
+	return (
+		<Typography mr={2} py={2}>
+			<span>{(props.courseContent.lectures || []).length} Lectures</span>
+			<VerticalBreak />
+			<span>{formattedTime}</span>
+		</Typography>
 	);
 };

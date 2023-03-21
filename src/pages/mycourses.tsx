@@ -12,15 +12,15 @@ import { AuthContext } from "../contexts/auth";
 import { PageContext } from "../contexts/page";
 import { tokens } from "../contexts/theme";
 import { UserData } from "../state/reducer/userData";
-import CourseContentBase from "./courseContent";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import CourseContent from "./courseContent";
 
 export const courses: any[] = require("../courses.json");
 
 const MyCoursesPage: FC = () => {
 	return (
 		<Routes>
-			<Route path=":path2" element={<CourseContentBase />} />
+			<Route path=":path2/*" element={<CourseContent />} />
 			<Route path="" element={<Base />} />
 		</Routes>
 	);

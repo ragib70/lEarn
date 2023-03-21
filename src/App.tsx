@@ -19,7 +19,7 @@ import LoginPage from "./pages/login";
 import NetworkProvider, { NetworkContext } from "./contexts/network";
 import { useContext, useEffect, useState } from "react";
 import CoursesPage from "./pages/courses";
-import PageContextProvider from "./contexts/page";
+import PageContextProvider, { PageContext } from "./contexts/page";
 import AppNotification from "./components/AppNotification";
 import { Provider } from "react-redux";
 import { store } from "./state/store";
@@ -88,7 +88,7 @@ const Main = () => {
 	const navigate = useNavigate();
 	const { path1 } = useParams();
 	const dispatch = useDispatch();
-    const [userDataQuery, setUserDataQuery] = useState({loading: false});
+    const {userDataQuery, setUserDataQuery} = useContext(PageContext);
 
 	useEffect(() => {
 		if (!account?.code) {
@@ -130,14 +130,13 @@ const Main = () => {
 	useEffect(() => {
         
 		if (wallet?.provider === "fuel" && contract && !userDataQuery.loading) {
-			// contract.functions.increment().txParams({ gasPrice: 1 }).call();
             setUserDataQuery({loading: true});
 			contract.functions
 				.get_user_data()
 				.txParams({ gasPrice: 1 })
 				.call()
 				.then((res: any) => {
-                    console.log(res);
+                    // console.log(res);
                     dispatch({
 						type: SET_USER_DATA,
 						payload: {
@@ -170,7 +169,6 @@ const Main = () => {
 	return (
 		<main className="content">
 			<AppNavBar search profile />
-            {/* wallet?.provider === "metamask" &&  */}
 			{(
 				<>
 					{path1 === "app" ? (

@@ -63,7 +63,7 @@ export const networks: { [key: string]: Network } = {
         label: 'Fuel Beta 3 Testnet',
         chainId: 'fuel0',
         rpcUrls: [],
-        contractAddress: '0x14f92d1905ad2f1c7c4516c39534cd59cec0d9641055fa22eacc4277500603d3'
+        contractAddress: '0x7416e211f432f16aaf25d71c18967f1a0ed4cf0f59a35813af71cb3b870dcdab'
     }
 };
 
