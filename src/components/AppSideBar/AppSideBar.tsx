@@ -20,9 +20,12 @@ import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { tokens } from "../../contexts/theme";
+import { NetworkContext } from "../../contexts/network";
+import { networks } from "../../constants/network";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 
 const AppSideBarContext = createContext<{
 	selected: string;
@@ -63,6 +66,8 @@ const AppSideBar: FC = () => {
 
 	const [selected, setSelected] = useState(path1 || "");
 	const [height, setHeight] = useState(window.innerHeight);
+	const { selectedNetworkId, setNetworkOption } = useContext(NetworkContext);
+
 	useEffect(() => {
 		setSelected(path1 || "");
 	}, [path1]);
@@ -210,6 +215,39 @@ const AppSideBar: FC = () => {
 							to="/more"
 							icon={<ReceiptOutlinedIcon />}
 						/>
+
+						<Box
+							marginTop={"auto"}
+							padding={2}
+							display="flex"
+							flexWrap={"wrap"}
+                            alignItems='center'
+						>
+							{/* {!collapsed && (
+								<Typography>Connected to network:</Typography>
+							)} */}
+							<Typography
+								fontWeight={645}
+								color={colors.greenAccent[400]}
+                                marginRight={1}
+                                // className='text-cut'
+							>
+								{selectedNetworkId
+									? networks[selectedNetworkId].label
+									: "-"}
+							</Typography>
+							<IconButton
+								title="Change network"
+								sx={{
+									marginLeft: "auto",
+                                    marginRight: '5px',
+									backgroundColor: colors.primary[900],
+								}}
+                                onClick={() => setNetworkOption(true)}
+							>
+								<ToggleOnIcon />
+							</IconButton>
+						</Box>
 					</Box>
 				</Menu>
 			</Sidebar>

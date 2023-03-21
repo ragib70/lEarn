@@ -57,9 +57,10 @@ import { NetworkContext } from "../contexts/network";
 import { AuthContext } from "../contexts/auth";
 import React from "react";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import { SET_NOTIF } from "../state/reducer/globalState";
 import InfoBadge from "../components/InfoBadge";
 import QuizPage from "./quiz";
+import { SET_LOADING, SET_NOTIF } from "../state/reducer/globalState";
+import { NativeAssetId } from "fuels";
 
 const CourseContent: FC = () => {
 	return (
@@ -73,7 +74,7 @@ const CourseContent: FC = () => {
 const CourseContentBase: FC = () => {
 	const theme: any = useTheme();
 	const colors = useMemo(() => tokens(theme.palette.mode), [theme]);
-	const { contract } = useContext(NetworkContext);
+	const { contract, wallet } = useContext(NetworkContext);
 	const { account } = useContext(AuthContext);
 	const { path2 } = useParams();
 	const course = useMemo(
@@ -112,6 +113,60 @@ const CourseContentBase: FC = () => {
 			parseInt(searchParams.get("activeContent") || "0")
 		);
 	}, [searchParams]);
+
+	const onErollSuccess = useCallback(() => {
+		setQuery((query) => ({
+			...query,
+			enroll: {
+				loading: false,
+			},
+		}));
+		dispatch({
+			type: ADD_COURSE,
+			payload: {
+				courses: [course.id],
+			},
+		});
+		dispatch({
+			type: SET_NOTIF,
+			payload: {
+				type: "info",
+				text: `Enrolled for course ${course.id}`,
+			},
+		});
+	}, [course]);
+
+	const onErollFailure = useCallback(
+		(error: any) => {
+			setQuery((query) => ({
+				...query,
+				enroll: {
+					loading: false,
+				},
+			}));
+			dispatch({
+				type: SET_NOTIF,
+				payload: {
+					type: "error",
+					text: `Error while case enrollment: ${error.message}`,
+				},
+			});
+		},
+		[course]
+	);
+
+	useEffect(() => {
+		const isLoading = Object.values(query).reduce(
+			(p, c: any) => p || c.loading,
+			false
+		);
+		dispatch({
+			type: SET_LOADING,
+			payload: {
+				loading: isLoading,
+			},
+		});
+	}, [query]);
 
 	return (
 		<Box m="20px" height="calc(100% - 7em)" position="relative">
@@ -240,52 +295,47 @@ const CourseContentBase: FC = () => {
 										px: 3,
 										fontSize: 16,
 									}}
-									disabled={subscribed}
+									disabled={
+										subscribed || query.enroll.loading
+									}
 									onClick={() => {
 										setQuery({
 											...query,
 											enroll: { loading: true },
 										});
-										contract?.methods
-											.enrollCourse(course.id)
-											.send({
-												from: account?.code,
-												value:
-													course.fees ||
-													10000000000000000,
-											})
-											.then((res: any) => {
-												setQuery({
-													...query,
-													enroll: { loading: false },
-												});
-												dispatch({
-													type: ADD_COURSE,
-													payload: {
-														courses: [course.id],
+										if (
+											!wallet ||
+											(wallet.provider === "fuel" &&
+												contract)
+										) {
+											contract.functions
+												.enroll_course(course.id)
+												.callParams({
+													forward: {
+														amount: 10000000,
+														assetId: NativeAssetId,
 													},
-												});
-												dispatch({
-													type: SET_NOTIF,
-													payload: {
-														type: "info",
-														text: `Enrolled for course ${course.id}`,
-													},
-												});
-											})
-											.catch((error: any) => {
-												setQuery({
-													...query,
-													enroll: { loading: false },
-												});
-												dispatch({
-													type: SET_NOTIF,
-													payload: {
-														type: "error",
-														text: `Error while case enrollment: ${error.message}`,
-													},
-												});
-											});
+												})
+												.txParams({ gasPrice: 1 })
+												.call()
+												.then(onErollSuccess)
+												.catch(onErollFailure);
+										} else if (
+											!wallet ||
+											(wallet.provider === "metamask" &&
+												contract)
+										) {
+											contract?.methods
+												.enrollCourse(course.id)
+												.send({
+													from: account?.code,
+													value:
+														course.fees ||
+														10000000000000000,
+												})
+												.then(onErollSuccess)
+												.catch(onErollFailure);
+										}
 									}}
 								>
 									{subscribed ? "Already enrolled" : "Enroll"}
@@ -585,7 +635,7 @@ const CourseContentBase: FC = () => {
 													)}
 												</List>
 												<Box display="flex" mt={3}>
-                                                    <Box marginLeft='auto'></Box>
+													<Box marginLeft="auto"></Box>
 													{nextcontent.quiz && (
 														<Button
 															variant="outlined"
@@ -664,14 +714,17 @@ const CourseContentBase: FC = () => {
 																	nextcontent.id
 															) >= 0 ||
 															(nextcontent.quiz &&
-																!((progressStatus[
-																	course.id
-																] || {})[
-																	nextcontent
-																		.id
-																]?.score
-																	?.points >
-																	0))
+																!(
+																	(progressStatus[
+																		course
+																			.id
+																	] || {})[
+																		nextcontent
+																			.id
+																	]?.score
+																		?.points >
+																	0
+																))
 														}
 														onClick={() => {
 															setQuery({

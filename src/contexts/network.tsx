@@ -12,44 +12,6 @@ import NetworkOption from "../components/NetworkOption/NetworkOption";
 import { allowedNetworkIds, networks } from "../constants/network";
 
 export const ABI = require("../abi.json");
-export const _abi = {
-	types: [
-		{
-			typeId: 0,
-			type: "()",
-			components: [],
-			typeParameters: null,
-		},
-		{
-			typeId: 1,
-			type: "u64",
-			components: null,
-			typeParameters: null,
-		},
-	],
-	functions: [
-		{
-			inputs: [],
-			name: "count",
-			output: {
-				name: "",
-				type: 1,
-				typeArguments: null,
-			},
-		},
-		{
-			inputs: [],
-			name: "increment",
-			output: {
-				name: "",
-				type: 0,
-				typeArguments: null,
-			},
-		},
-	],
-	loggedTypes: [],
-};
-
 export const web3 = new Web3(window.ethereum);
 export type WalletProvider = "metamask" | "fuel" | undefined;
 export type Wallet = { provider: WalletProvider; api: any };
@@ -91,6 +53,7 @@ const NetworkProvider: FC<{ children: any }> = ({ children }) => {
 	useEffect(() => {
 		// method: net_version, would give decimal string for chaninId
 		if (wallet?.provider === "fuel" && !fuel) {
+            setSelectedNetworkId('fuel0')
 			return;
 		}
 

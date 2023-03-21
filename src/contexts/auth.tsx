@@ -2,8 +2,10 @@ import { createContext, FC, useContext, useEffect, useState } from "react";
 import { isEmpty } from "lodash";
 import { useDispatch } from "react-redux";
 import { SET_NOTIF } from "../state/reducer/globalState";
-import { NetworkContext, WalletProvider, _abi } from "./network";
+import { NetworkContext, WalletProvider } from "./network";
 import { Contract, Wallet } from "fuels";
+import { networks } from "../constants/network";
+import { fuel_abi } from "../constants/abi";
 
 export type Account = { code: string; source: "storage" | "eth" };
 export const AuthContext = createContext<{
@@ -19,7 +21,8 @@ export const AuthContext = createContext<{
 });
 
 const AuthProvider: FC<{ children: any }> = ({ children }) => {
-	const { setWallet, wallet, setContract, fuel } = useContext(NetworkContext);
+	const { setWallet, wallet, setContract, fuel, selectedNetworkId } =
+		useContext(NetworkContext);
 	const [prvtKey, setPrvtKey] = useState<string | undefined>();
 	const storageAccount = localStorage.getItem("l-earn-account");
 	const [account, setAccount] = useState<Account | undefined>(
@@ -128,17 +131,21 @@ const AuthProvider: FC<{ children: any }> = ({ children }) => {
 		}
 	}, [account, wallet, fuel]);
 	useEffect(() => {
-		if (account?.code && wallet?.provider === "fuel" && fuel) {
+		if (
+			account?.code &&
+			wallet?.provider === "fuel" &&
+			fuel &&
+			selectedNetworkId
+		) {
 			fuel.getWallet(account.code).then((fuelWallet: any) => {
 				console.log("fuel wallet", fuelWallet);
-				const id =
-					"0x3edb96c23766b8504caaff042994efa18460e7ba27f60191394a6bcf5be8d7d8";
-				const contract = new Contract(id, _abi, fuelWallet);
+				const id = networks[selectedNetworkId].contractAddress || "";
+				const contract = new Contract(id, fuel_abi, fuelWallet);
 				console.log("fuel contract", contract);
 				setContract(contract);
 			});
 		}
-	}, [account, wallet, fuel]);
+	}, [account, wallet, fuel, selectedNetworkId]);
 
 	useEffect(() => {
 		const handleAccountChange = (accounts: Array<string>) => {

@@ -16,7 +16,7 @@ const FuelTest: FC = () => {
 
 	return (
 		<Box>
-			Count: <span style={{ margin: "0 10px 0 10px" }}>{counter}</span>
+			Count: <span style={{ margin: "0 10px 0 10px" }}>{counter? counter.words[0]: 0}</span>
 			<Button
 				variant="contained"
 				color="success"
@@ -32,6 +32,7 @@ const FuelTest: FC = () => {
 								.count()
 								.get()
 								.then((res: any) => {
+                                    console.log(res)
 									setCounter(res.value);
 									setLoading(false);
 								});

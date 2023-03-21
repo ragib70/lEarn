@@ -31,7 +31,7 @@ export const networks: { [key: string]: Network } = {
         contractAddress: '0x87e940bF5c8FC26ad9F80985D23176D21646423E'
     },
     "10200": {
-		label: "Chiado",
+		label: "Gnosis Chain (Chiado)",
         image: '/gnosis.png',
 		chainId: "10200",
 		rpcUrls: ["https://rpc.chiadochain.net"],
@@ -58,8 +58,15 @@ export const networks: { [key: string]: Network } = {
         rpcUrls: ["https://goerli.optimism.io"],
         contractAddress: '0x8F47376eFE5CA9f9b9641a093FA71436192484A5'
     },
+    "fuel0": {
+        image: '/fuel_icon.svg',
+        label: 'Fuel Beta 3 Testnet',
+        chainId: 'fuel0',
+        rpcUrls: [],
+        contractAddress: '0x14f92d1905ad2f1c7c4516c39534cd59cec0d9641055fa22eacc4277500603d3'
+    }
 };
 
-export const allowedNetworkIds: {[key: string]: string[]} = {'metamask': ["80001", "3141", "5001", "10200", "534353", "1442", "420"], 'fuel': [], 'default': []};
+export const allowedNetworkIds: {[key: string]: string[]} = {'metamask': [ "10200", "534353", "1442", "420", "3141", "5001", "80001"], 'fuel': ['fuel0'], 'default': []};
 
 export const pushApiKey = 'ZaCrOdyBNN.ajF5Igu8ppOfNkxiuiQGoXDyhTkd8sY4gG1v7aa822iVMJSnBE9zp1cXjDgUIPHC';
