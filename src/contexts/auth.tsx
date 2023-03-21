@@ -135,7 +135,7 @@ const AuthProvider: FC<{ children: any }> = ({ children }) => {
 			account?.code &&
 			wallet?.provider === "fuel" &&
 			fuel &&
-			selectedNetworkId
+			selectedNetworkId === 'fuel0'
 		) {
 			fuel.getWallet(account.code).then((fuelWallet: any) => {
 				console.log("fuel wallet", fuelWallet);

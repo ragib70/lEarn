@@ -20,6 +20,7 @@ import {
 import Box from "@mui/material/Box";
 import { height } from "@mui/system";
 import {
+	createContext,
 	FC,
 	useCallback,
 	useContext,
@@ -61,21 +62,40 @@ import InfoBadge from "../components/InfoBadge";
 import QuizPage from "./quiz";
 import { SET_LOADING, SET_NOTIF } from "../state/reducer/globalState";
 import { NativeAssetId } from "fuels";
+import { PageContext } from "../contexts/page";
+
+type CourseQuery = {
+	enroll: { loading: boolean };
+	completeModule: { ids: any[] };
+};
+const defaultCourseQuery: CourseQuery = {
+	enroll: { loading: false },
+	completeModule: { ids: [] },
+};
+export const CourseContentContext = createContext<{
+	query: CourseQuery;
+	setQuery: React.Dispatch<React.SetStateAction<CourseQuery>>;
+}>({ query: defaultCourseQuery, setQuery: () => {} });
 
 const CourseContent: FC = () => {
+	const [query, setQuery] = useState<CourseQuery>(defaultCourseQuery);
 	return (
-		<Routes>
-			<Route path="quiz/:path3" element={<QuizPage />} />
-			<Route path="" element={<CourseContentBase />} />
-		</Routes>
+		<CourseContentContext.Provider value={{ query, setQuery }}>
+			<Routes>
+				<Route path="quiz/:path3" element={<QuizPage />} />
+				<Route path="" element={<CourseContentBase />} />
+			</Routes>
+		</CourseContentContext.Provider>
 	);
 };
 
 const CourseContentBase: FC = () => {
 	const theme: any = useTheme();
 	const colors = useMemo(() => tokens(theme.palette.mode), [theme]);
+	const { query, setQuery } = useContext(CourseContentContext);
 	const { contract, wallet } = useContext(NetworkContext);
 	const { account } = useContext(AuthContext);
+	const { searchText } = useContext(PageContext);
 	const { path2 } = useParams();
 	const course = useMemo(
 		() => courses.find((c) => `${c.id}` === path2),
@@ -89,10 +109,6 @@ const CourseContentBase: FC = () => {
 		() => subscribedCourses.findIndex((cid) => cid === course.id) >= 0,
 		[subscribedCourses, course]
 	);
-	const [query, setQuery] = useState<{
-		enroll: { loading: boolean };
-		completeModule: { ids: any[] };
-	}>({ enroll: { loading: false }, completeModule: { ids: [] } });
 
 	const [activeAccordianIndex, setActiveAccordianIndex] =
 		useState<number>(-1);
@@ -110,7 +126,7 @@ const CourseContentBase: FC = () => {
 
 	useEffect(() => {
 		setActiveAccordianIndex(
-			parseInt(searchParams.get("activeContent") || "0")
+			parseInt(searchParams.get("activeContent") || "-1")
 		);
 	}, [searchParams]);
 
@@ -156,10 +172,9 @@ const CourseContentBase: FC = () => {
 	);
 
 	useEffect(() => {
-		const isLoading = Object.values(query).reduce(
-			(p, c: any) => p || c.loading,
-			false
-		);
+		const isLoading =
+			Object.values(query).reduce((p, c: any) => p || c.loading, false) ||
+			query.completeModule.ids.length > 0;
 		dispatch({
 			type: SET_LOADING,
 			payload: {
@@ -171,8 +186,13 @@ const CourseContentBase: FC = () => {
 	return (
 		<Box m="20px" height="calc(100% - 7em)" position="relative">
 			<Button
-				variant="contained"
-				sx={{ mb: 2 }}
+				variant="outlined"
+				sx={{
+					mb: 2,
+					marginRight: "10px",
+					backgroundColor: colors.primary[400],
+					color: colors.primary[100],
+				}}
 				onClick={() => navigate(-1)}
 			>
 				<ArrowBackIcon />
@@ -348,8 +368,13 @@ const CourseContentBase: FC = () => {
 						</Card>
 						<Box mt={5}>
 							{subscribed &&
-								(course.content as any[]).map(
-									(nextcontent, index) => (
+								(course.content as any[])
+									.filter((ct) =>
+										((ct.label as string) || "")
+											.toLowerCase()
+											.includes(searchText.toLowerCase())
+									)
+									.map((nextcontent, index) => (
 										<Accordion
 											key={`content-${index}`}
 											expanded={
@@ -634,193 +659,13 @@ const CourseContentBase: FC = () => {
 														)
 													)}
 												</List>
-												<Box display="flex" mt={3}>
-													<Box marginLeft="auto"></Box>
-													{nextcontent.quiz && (
-														<Button
-															variant="outlined"
-															sx={{
-																marginRight:
-																	"10px",
-																backgroundColor:
-																	colors
-																		.primary[400],
-																color: colors
-																	.primary[100],
-															}}
-															onClick={() => {
-																navigate(
-																	`quiz/${nextcontent.id}`
-																);
-															}}
-														>
-															Take quiz
-														</Button>
-													)}
-													<Button
-														variant="contained"
-														sx={{
-															backgroundColor:
-																colors
-																	.greenAccent[400],
-														}}
-														disabled={
-															(progressStatus[
-																course.id
-															] || {})[
-																nextcontent.id
-															]?.completed ||
-															(
-																nextcontent.lectures ||
-																[]
-															).reduce(
-																(
-																	p: number,
-																	c: any
-																) => {
-																	return (
-																		p +
-																		(((
-																			((progressStatus[
-																				course
-																					.id
-																			] ||
-																				{})[
-																				nextcontent
-																					.id
-																			] ||
-																				{})[
-																				c
-																					.id
-																			] ||
-																			{}
-																		)
-																			.status ||
-																			"not_yet_started") ===
-																		"completed"
-																			? 1
-																			: 0)
-																	);
-																},
-																0
-															) !==
-																(
-																	nextcontent.lectures ||
-																	[]
-																).length ||
-															query.completeModule.ids.findIndex(
-																(id) =>
-																	id ===
-																	nextcontent.id
-															) >= 0 ||
-															(nextcontent.quiz &&
-																!(
-																	(progressStatus[
-																		course
-																			.id
-																	] || {})[
-																		nextcontent
-																			.id
-																	]?.score
-																		?.points >
-																	0
-																))
-														}
-														onClick={() => {
-															setQuery({
-																...query,
-																completeModule:
-																	{
-																		ids: [
-																			...query
-																				.completeModule
-																				.ids,
-																			nextcontent.id,
-																		],
-																	},
-															});
-
-															contract?.methods
-																.sectionCompleted(
-																	course.id,
-																	nextcontent.id
-																)
-																.send({
-																	from: account?.code,
-																})
-																.then(() => {
-																	setQuery({
-																		...query,
-																		completeModule:
-																			{
-																				ids: query.completeModule.ids.filter(
-																					(
-																						id
-																					) =>
-																						id !==
-																						nextcontent.id
-																				),
-																			},
-																	});
-																	dispatch({
-																		type: COMPLETE_MODULE,
-																		payload:
-																			{
-																				courseId:
-																					course.id,
-																				moduleId:
-																					nextcontent.id,
-																			},
-																	});
-																	dispatch({
-																		type: SET_NOTIF,
-																		payload:
-																			{
-																				type: "info",
-																				text: `Module ${nextcontent.label} completed.`,
-																			},
-																	});
-																})
-																.catch(
-																	(
-																		error: any
-																	) => {
-																		setQuery(
-																			{
-																				...query,
-																				completeModule:
-																					{
-																						ids: query.completeModule.ids.filter(
-																							(
-																								id
-																							) =>
-																								id !==
-																								nextcontent.id
-																						),
-																					},
-																			}
-																		);
-																		dispatch(
-																			{
-																				type: SET_NOTIF,
-																				payload:
-																					{
-																						type: "error",
-																						text: `Error while completing module: ${error.message}`,
-																					},
-																			}
-																		);
-																	}
-																);
-														}}
-													>
-														Complete
-													</Button>
-												</Box>
+												<ContentFooter
+													course={course}
+													courseContent={nextcontent}
+												/>
 											</AccordionDetails>
 										</Accordion>
-									)
-								)}
+									))}
 
 							{!subscribed && (
 								<Box
@@ -900,5 +745,159 @@ const LectureStatus: FC<{
 		// >
 		// 	{startCase(value)}
 		// </span>
+	);
+};
+
+const ContentFooter: FC<{ course: any; courseContent: any }> = (props) => {
+	const theme: any = useTheme();
+	const colors = useMemo(() => tokens(theme.palette.mode), [theme]);
+	const { query, setQuery } = useContext(CourseContentContext);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const { courses: subscribedCourses, progressStatus } = useSelector(
+		(state: any) => state.userData as UserData
+	);
+	const { contract } = useContext(NetworkContext);
+	const { account } = useContext(AuthContext);
+	const topicCompleted = useMemo(
+		() =>
+			(props.courseContent.lectures || []).reduce((p: number, c: any) => {
+				return (
+					p +
+					(((
+						((progressStatus[props.course.id] || {})[
+							props.courseContent.id
+						] || {})[c.id] || {}
+					).status || "not_yet_started") === "completed"
+						? 1
+						: 0)
+				);
+			}, 0) === (props.courseContent.lectures || []).length,
+		[props, progressStatus]
+	);
+	const quizTaken = useMemo(
+		() =>
+			!props.courseContent.quiz ||
+			(progressStatus[props.course.id] || {})[props.courseContent.id]
+				?.score?.points > 0,
+		[props, progressStatus]
+	);
+	return (
+		<Box display="flex" mt={3} alignItems="center">
+			{!quizTaken && (
+				<Typography display="flex" alignItems="center">
+					<ErrorOutlineIcon />{" "}
+					<span style={{ marginLeft: 5 }}>
+						Please take quiz to complete section.
+					</span>{" "}
+				</Typography>
+			)}
+			{quizTaken && topicCompleted && (
+				<Typography display="flex" alignItems="center">
+					<ErrorOutlineIcon />{" "}
+					<span style={{ marginLeft: 5 }}>
+						Click on "Complete" to get refund.
+					</span>{" "}
+				</Typography>
+			)}
+			<Box marginLeft="auto"></Box>
+			{props.courseContent.quiz && (
+				<Button
+					variant={topicCompleted ? "outlined" : "outlined"}
+					sx={{
+						marginRight: "10px",
+						backgroundColor: topicCompleted
+							? colors.blueAccent[400]
+							: "inherit",
+						color: colors.primary[100],
+					}}
+					onClick={() => {
+						navigate(`quiz/${props.courseContent.id}`);
+					}}
+					disabled={!topicCompleted}
+				>
+					Take quiz
+				</Button>
+			)}
+			<Button
+				variant="contained"
+				sx={{
+					backgroundColor: colors.greenAccent[400],
+				}}
+				disabled={
+					(progressStatus[props.course.id] || {})[
+						props.courseContent.id
+					]?.completed ||
+					!topicCompleted ||
+					query.completeModule.ids.findIndex(
+						(id) => id === props.courseContent.id
+					) >= 0 ||
+					!quizTaken
+				}
+				onClick={() => {
+					setQuery({
+						...query,
+						completeModule: {
+							ids: [
+								...query.completeModule.ids,
+								props.courseContent.id,
+							],
+						},
+					});
+
+					contract?.methods
+						.sectionCompleted(
+							props.course.id,
+							props.courseContent.id
+						)
+						.send({
+							from: account?.code,
+						})
+						.then(() => {
+							setQuery({
+								...query,
+								completeModule: {
+									ids: query.completeModule.ids.filter(
+										(id) => id !== props.courseContent.id
+									),
+								},
+							});
+							dispatch({
+								type: COMPLETE_MODULE,
+								payload: {
+									courseId: props.course.id,
+									moduleId: props.courseContent.id,
+								},
+							});
+							dispatch({
+								type: SET_NOTIF,
+								payload: {
+									type: "info",
+									text: `Module ${props.courseContent.label} completed.`,
+								},
+							});
+						})
+						.catch((error: any) => {
+							setQuery({
+								...query,
+								completeModule: {
+									ids: query.completeModule.ids.filter(
+										(id) => id !== props.courseContent.id
+									),
+								},
+							});
+							dispatch({
+								type: SET_NOTIF,
+								payload: {
+									type: "error",
+									text: `Error while completing module: ${error.message}`,
+								},
+							});
+						});
+				}}
+			>
+				Complete
+			</Button>
+		</Box>
 	);
 };
