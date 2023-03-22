@@ -85,6 +85,8 @@ const AuthProvider: FC<{ children: any }> = ({ children }) => {
 
 		if (account?.source !== "storage" && wallet?.provider) {
 			localStorage.setItem("l-earn-wallet-provider", wallet.provider);
+		} else if (!wallet?.provider) {
+			localStorage.removeItem("l-earn-wallet-provider");
 		}
 
 		if (account?.code && account.source === "storage" && fuel) {
@@ -135,7 +137,7 @@ const AuthProvider: FC<{ children: any }> = ({ children }) => {
 			account?.code &&
 			wallet?.provider === "fuel" &&
 			fuel &&
-			selectedNetworkId === 'fuel0'
+			selectedNetworkId === "fuel0"
 		) {
 			fuel.getWallet(account.code).then((fuelWallet: any) => {
 				console.log("fuel wallet", fuelWallet);
