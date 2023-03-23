@@ -247,6 +247,47 @@
                             "second": 29
                         }
                     }
+                ],
+                "quiz": [
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "Which one of these control flow statements have three parameters to it?",
+                        "options": [
+                            "switch",
+                            "while",
+                            "do-while",
+                            "for"
+                        ],
+                        "answer": "for"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "How do you write a Greater than or equal to Relational operator",
+                        "options": [
+                            "<=",
+                            "=<",
+                            ">=",
+                            "=>"
+                        ],
+                        "answer": ">="
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "Base on the code block below what will print to the console? \n int x=10;\n do {System.out.println(x*2);\n x--;}\n while(x>10);",
+                        "options": [
+                            "20",
+                            "infinite loop",
+                            "200",
+                            "20000000"
+                        ],
+                        "answer": "20"
+                    }
                 ]
             },
             {
@@ -378,6 +419,71 @@
                         "type": "problem",
                         "label": "Exercise: Passing Data via \"props\""
                     }
+                ],
+                "quiz": [
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "What is the correct command to create a new React project?",
+                        "options": [
+                            "npx create-react-app my-app",
+                            "npm create-react-app my-app",
+                            "npx create-react-app",
+                            "npm create-react-app my-app"
+                        ],
+                        "answer": "npx create-react-app my-app"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "What does 'my-app' refer to in the command npx create-react-app my-app?",
+                        "options": [
+                            "The directory that you want to create your app in",
+                            "The type of app you want to create",
+                            "The name you want to use for your new app",
+                            "The name of an existing app"
+                        ],
+                        "answer": "The name you want to use for your new app"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "What is the children prop?",
+                        "options": [
+                            "A property that lets you pass data to child components",
+                            "A property that lets you nest components in other components",
+                            "A property that lets you set an object as a property",
+                            "A property that lets you add child values to state"
+                        ],
+                        "answer": "A property that lets you nest components in other components"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "React components must start with a capital letter",
+                        "options": [
+                            "True",
+                            "False"
+                        ],
+                        "answer": "True"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "Which of the following is NOT a rule for React Hooks?",
+                        "options": [
+                            "Hooks cannot be conditional",
+                            "Hooks can only be called at the top level of a component",
+                            "Hooks can be called in class or function components",
+                            "Hooks can only be called in inside React function components"
+                        ],
+                        "answer": "Hooks can be called in class or function components"
+                    }
                 ]
             },
             {
@@ -410,6 +516,71 @@
                             "minute": 23,
                             "second": 59
                         }
+                    }
+                ],
+                "quiz": [
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "What is the correct command to create a new React project?",
+                        "options": [
+                            "npx create-react-app my-app",
+                            "npm create-react-app my-app",
+                            "npx create-react-app",
+                            "npm create-react-app my-app"
+                        ],
+                        "answer": "npx create-react-app my-app"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "What does 'my-app' refer to in the command npx create-react-app my-app?",
+                        "options": [
+                            "The directory that you want to create your app in",
+                            "The type of app you want to create",
+                            "The name you want to use for your new app",
+                            "The name of an existing app"
+                        ],
+                        "answer": "The name you want to use for your new app"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "What is the children prop?",
+                        "options": [
+                            "A property that lets you pass data to child components",
+                            "A property that lets you nest components in other components",
+                            "A property that lets you set an object as a property",
+                            "A property that lets you add child values to state"
+                        ],
+                        "answer": "A property that lets you nest components in other components"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "React components must start with a capital letter",
+                        "options": [
+                            "True",
+                            "False"
+                        ],
+                        "answer": "True"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "Which of the following is NOT a rule for React Hooks?",
+                        "options": [
+                            "Hooks cannot be conditional",
+                            "Hooks can only be called at the top level of a component",
+                            "Hooks can be called in class or function components",
+                            "Hooks can only be called in inside React function components"
+                        ],
+                        "answer": "Hooks can be called in class or function components"
                     }
                 ]
             },
@@ -444,6 +615,71 @@
                             "second": 29
                         }
                     }
+                ],
+                "quiz": [
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "What is the correct command to create a new React project?",
+                        "options": [
+                            "npx create-react-app my-app",
+                            "npm create-react-app my-app",
+                            "npx create-react-app",
+                            "npm create-react-app my-app"
+                        ],
+                        "answer": "npx create-react-app my-app"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "What does 'my-app' refer to in the command npx create-react-app my-app?",
+                        "options": [
+                            "The directory that you want to create your app in",
+                            "The type of app you want to create",
+                            "The name you want to use for your new app",
+                            "The name of an existing app"
+                        ],
+                        "answer": "The name you want to use for your new app"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "What is the children prop?",
+                        "options": [
+                            "A property that lets you pass data to child components",
+                            "A property that lets you nest components in other components",
+                            "A property that lets you set an object as a property",
+                            "A property that lets you add child values to state"
+                        ],
+                        "answer": "A property that lets you nest components in other components"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "React components must start with a capital letter",
+                        "options": [
+                            "True",
+                            "False"
+                        ],
+                        "answer": "True"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "Which of the following is NOT a rule for React Hooks?",
+                        "options": [
+                            "Hooks cannot be conditional",
+                            "Hooks can only be called at the top level of a component",
+                            "Hooks can be called in class or function components",
+                            "Hooks can only be called in inside React function components"
+                        ],
+                        "answer": "Hooks can be called in class or function components"
+                    }
                 ]
             },
             {
@@ -472,6 +708,71 @@
                         "id": 2,
                         "type": "problem",
                         "label": "A Problem with useEffect()"
+                    }
+                ],
+                "quiz": [
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "What is the correct command to create a new React project?",
+                        "options": [
+                            "npx create-react-app my-app",
+                            "npm create-react-app my-app",
+                            "npx create-react-app",
+                            "npm create-react-app my-app"
+                        ],
+                        "answer": "npx create-react-app my-app"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "What does 'my-app' refer to in the command npx create-react-app my-app?",
+                        "options": [
+                            "The directory that you want to create your app in",
+                            "The type of app you want to create",
+                            "The name you want to use for your new app",
+                            "The name of an existing app"
+                        ],
+                        "answer": "The name you want to use for your new app"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "What is the children prop?",
+                        "options": [
+                            "A property that lets you pass data to child components",
+                            "A property that lets you nest components in other components",
+                            "A property that lets you set an object as a property",
+                            "A property that lets you add child values to state"
+                        ],
+                        "answer": "A property that lets you nest components in other components"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "React components must start with a capital letter",
+                        "options": [
+                            "True",
+                            "False"
+                        ],
+                        "answer": "True"
+                    },
+                    {
+                        "type": "multiple_choice",
+                        "duration": {"minute": 3},
+                        "points": 1,
+                        "statement": "Which of the following is NOT a rule for React Hooks?",
+                        "options": [
+                            "Hooks cannot be conditional",
+                            "Hooks can only be called at the top level of a component",
+                            "Hooks can be called in class or function components",
+                            "Hooks can only be called in inside React function components"
+                        ],
+                        "answer": "Hooks can be called in class or function components"
                     }
                 ]
             }

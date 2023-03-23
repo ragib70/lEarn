@@ -135,7 +135,13 @@ const Main = () => {
         setUserDataQuery({loading: false});
     }
 	useEffect(() => {
-        
+        dispatch({
+            type: SET_USER_DATA,
+            payload: {
+                courses: [],
+                progressStatus: {}
+            },
+        });
 		if (wallet?.provider === "fuel" && contract && !userDataQuery.loading) {
             setUserDataQuery({loading: true});
 			contract.functions
