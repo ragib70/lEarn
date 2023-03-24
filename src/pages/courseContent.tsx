@@ -63,6 +63,7 @@ import QuizPage from "./quiz";
 import { SET_LOADING, SET_NOTIF } from "../state/reducer/globalState";
 import { NativeAssetId } from "fuels";
 import { PageContext } from "../contexts/page";
+import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 
 type CourseQuery = {
 	enroll: { loading: boolean };
@@ -306,62 +307,89 @@ const CourseContentBase: FC = () => {
 										{course.duration.minute} minutes
 									</Typography>
 								</Box>
-								<Button
-									variant="contained"
-									sx={{
-										backgroundColor:
-											colors.greenAccent[500],
-										py: 1,
-										px: 3,
-										fontSize: 16,
-									}}
-									disabled={
-										subscribed ||
-										query.enroll.loading ||
-										userDataQuery.loading
-									}
-									onClick={() => {
-										setQuery({
-											...query,
-											enroll: { loading: true },
-										});
-										if (
-											!wallet ||
-											(wallet.provider === "fuel" &&
-												contract)
-										) {
-											contract.functions
-												.enroll_course(course.id)
-												.callParams({
-													forward: {
-														amount: course.fuelFees,
-														assetId: NativeAssetId,
-													},
-												})
-												.txParams({ gasPrice: 1 })
-												.call()
-												.then(onErollSuccess)
-												.catch(onErollFailure);
-										} else if (
-											!wallet ||
-											(wallet.provider === "metamask" &&
-												contract)
-										) {
-											contract?.methods
-												.enrollCourse(course.id)
-												.send({
-													from: account?.code,
-													value:
-														course.fees ||
-														10000000000000000,
-												})
-												.then(onErollSuccess)
-												.catch(onErollFailure);
+								<Box display="flex">
+									<Button
+										variant="contained"
+										sx={{
+											backgroundColor:
+												colors.greenAccent[500],
+											py: 1,
+											px: 3,
+											fontSize: 16,
+										}}
+										disabled={
+											subscribed ||
+											query.enroll.loading ||
+											userDataQuery.loading
 										}
-									}}
-								>
-									{subscribed ? "Already enrolled" : "Enroll"}
-								</Button>
+										onClick={() => {
+											setQuery({
+												...query,
+												enroll: { loading: true },
+											});
+											if (
+												!wallet ||
+												(wallet.provider === "fuel" &&
+													contract)
+											) {
+												contract.functions
+													.enroll_course(course.id)
+													.callParams({
+														forward: {
+															amount: course.fuelFees,
+															assetId:
+																NativeAssetId,
+														},
+													})
+													.txParams({ gasPrice: 1 })
+													.call()
+													.then(onErollSuccess)
+													.catch(onErollFailure);
+											} else if (
+												!wallet ||
+												(wallet.provider ===
+													"metamask" &&
+													contract)
+											) {
+												contract?.methods
+													.enrollCourse(course.id)
+													.send({
+														from: account?.code,
+														value:
+															course.fees ||
+															10000000000000000,
+													})
+													.then(onErollSuccess)
+													.catch(onErollFailure);
+											}
+										}}
+									>
+										{subscribed
+											? "Already enrolled"
+											: "Enroll"}
+									</Button>
+									{!subscribed && (
+										<Box
+											display="flex"
+											alignItems="center"
+											sx={{
+												backgroundColor:
+													colors.primary[400],
+											}}
+											padding={1}
+											marginLeft={1}
+											borderRadius={1}
+										>
+											<MonetizationOnOutlinedIcon />
+											<Typography
+												variant="h4"
+												marginLeft={1}
+											>
+												GAS FEE: {course.fees}
+											</Typography>
+										</Box>
+									)}
+								</Box>
 							</CardContent>
 							{/* <CardActions>
 				<Button size="small">Share</Button>
@@ -693,31 +721,34 @@ const ContentFooter: FC<{ course: any; courseContent: any }> = (props) => {
 		[props, progressStatus]
 	);
 
-	const onCompleteSuccess = useCallback((res: any) => {
-        console.log(res)
-		setQuery({
-			...query,
-			completeModule: {
-				ids: query.completeModule.ids.filter(
-					(id) => id !== props.courseContent.id
-				),
-			},
-		});
-		dispatch({
-			type: COMPLETE_MODULE,
-			payload: {
-				courseId: props.course.id,
-				moduleId: props.courseContent.id,
-			},
-		});
-		dispatch({
-			type: SET_NOTIF,
-			payload: {
-				type: "info",
-				text: `Module ${props.courseContent.label} completed.`,
-			},
-		});
-	}, [props]);
+	const onCompleteSuccess = useCallback(
+		(res: any) => {
+			console.log(res);
+			setQuery({
+				...query,
+				completeModule: {
+					ids: query.completeModule.ids.filter(
+						(id) => id !== props.courseContent.id
+					),
+				},
+			});
+			dispatch({
+				type: COMPLETE_MODULE,
+				payload: {
+					courseId: props.course.id,
+					moduleId: props.courseContent.id,
+				},
+			});
+			dispatch({
+				type: SET_NOTIF,
+				payload: {
+					type: "info",
+					text: `Module ${props.courseContent.label} completed.`,
+				},
+			});
+		},
+		[props]
+	);
 
 	const onCompleteFailure = useCallback(
 		(error: any) => {
@@ -742,26 +773,34 @@ const ContentFooter: FC<{ course: any; courseContent: any }> = (props) => {
 
 	return (
 		<Box display="flex" mt={3} alignItems="center">
-			{!quizTaken && !((progressStatus[props.course.id] || {})[
-							props.courseContent.id
-						] || {}).completed && (
-				<Typography display="flex" alignItems="center">
-					<ErrorOutlineIcon />{" "}
-					<span style={{ marginLeft: 5 }}>
-						Please take quiz to complete section.
-					</span>{" "}
-				</Typography>
-			)}
-			{quizTaken && topicCompleted && !((progressStatus[props.course.id] || {})[
-							props.courseContent.id
-						] || {}).completed && (
-				<Typography display="flex" alignItems="center">
-					<ErrorOutlineIcon />{" "}
-					<span style={{ marginLeft: 5 }}>
-						Click on "Complete" to get refund.
-					</span>{" "}
-				</Typography>
-			)}
+			{!quizTaken &&
+				!(
+					(progressStatus[props.course.id] || {})[
+						props.courseContent.id
+					] || {}
+				).completed && (
+					<Typography display="flex" alignItems="center">
+						<ErrorOutlineIcon />{" "}
+						<span style={{ marginLeft: 5 }}>
+							Please take quiz to complete section.
+						</span>{" "}
+					</Typography>
+				)}
+			{quizTaken &&
+				topicCompleted &&
+				!(
+					(progressStatus[props.course.id] || {})[
+						props.courseContent.id
+					] || {}
+				).completed && (
+					<Typography display="flex" alignItems="center">
+						<ErrorOutlineIcon />{" "}
+						<span style={{ marginLeft: 5 }}>
+							Click on "Complete" to get refund of value{" "}
+							{props.course.refundAmount} ETH.
+						</span>{" "}
+					</Typography>
+				)}
 			<Box marginLeft="auto"></Box>
 			{props.courseContent.quiz && (
 				<Button
@@ -809,7 +848,10 @@ const ContentFooter: FC<{ course: any; courseContent: any }> = (props) => {
 
 					if (wallet?.provider === "fuel") {
 						contract.functions
-							.section_completed(props.course.id, props.courseContent.id)
+							.section_completed(
+								props.course.id,
+								props.courseContent.id
+							)
 							.txParams({ gasPrice: 1 })
 							.call()
 							.then(onCompleteSuccess)

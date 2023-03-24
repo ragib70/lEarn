@@ -2,6 +2,7 @@
     {
         "id": 0,
         "fees": 10000000000000000,
+        "refundAmount": 0.001,
         "fuelFees": 10000000,
         "label": "JAVA Backend Development - Live",
         "subscriptionCount": 76005,
@@ -370,6 +371,7 @@
     {
         "id": 1,
         "fees": 20000000000000000,
+        "refundAmount": 0.002,
         "fuelFees": 20000000,
         "label": "React - The Complete Guide (incl Hooks, React Router, Redux)",
         "subscriptionCount": 34793,
