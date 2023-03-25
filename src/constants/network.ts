@@ -49,7 +49,7 @@ export const networks: { [key: string]: Network } = {
         label: 'Polygon zkEVM',
         chainId: '1442',
         rpcUrls: ["https://rpc.public.zkevm-test.net"],
-        contractAddress: '0x8F47376eFE5CA9f9b9641a093FA71436192484A5'
+        contractAddress: '0x82186918c82B1F79920525f0E6453036c6d1d8A0'
     },
     "420": {
         image: '/optimism.png',

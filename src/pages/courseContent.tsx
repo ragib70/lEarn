@@ -385,7 +385,9 @@ const CourseContentBase: FC = () => {
 												variant="h4"
 												marginLeft={1}
 											>
-												GAS FEE: {course.fees}
+												COURSE PRICE:{" "}
+												{course.fees / Math.pow(10, 18)}{" "}
+												ETH
 											</Typography>
 										</Box>
 									)}
@@ -796,12 +798,27 @@ const ContentFooter: FC<{ course: any; courseContent: any }> = (props) => {
 					<Typography display="flex" alignItems="center">
 						<ErrorOutlineIcon />{" "}
 						<span style={{ marginLeft: 5 }}>
-							Click on "Complete" to get refund of value{" "}
-							{props.course.refundAmount} ETH.
+							Click on "Complete" to get reward of value{" "}
+							{props.course.refundAmount / 10} ETH.
 						</span>{" "}
 					</Typography>
 				)}
 			<Box marginLeft="auto"></Box>
+			<Box
+				display="flex"
+				alignItems="center"
+				sx={{
+					backgroundColor: colors.primary[400],
+				}}
+				padding={1}
+				marginRight={1}
+				borderRadius={1}
+			>
+				<MonetizationOnOutlinedIcon />
+				<Typography variant="h4" marginLeft={1}>
+					REWARD: {props.course.refundAmount / 10} ETH
+				</Typography>
+			</Box>
 			{props.courseContent.quiz && (
 				<Button
 					variant={topicCompleted ? "outlined" : "outlined"}
