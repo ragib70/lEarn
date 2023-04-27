@@ -816,7 +816,7 @@ const ContentFooter: FC<{ course: any; courseContent: any }> = (props) => {
 			>
 				<MonetizationOnOutlinedIcon />
 				<Typography variant="h4" marginLeft={1}>
-					REWARD: {props.course.refundAmount / 10} ETH
+					REWARD: {props.course.refundAmount} ETH
 				</Typography>
 			</Box>
 			{props.courseContent.quiz && (

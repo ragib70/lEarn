@@ -65,22 +65,12 @@ const AppSideBar: FC = () => {
 	const { path1 } = useParams();
 
 	const [selected, setSelected] = useState(path1 || "");
-	const [height, setHeight] = useState(window.innerHeight);
 	const { selectedNetworkId, setNetworkOption } = useContext(NetworkContext);
 
 	useEffect(() => {
 		setSelected(path1 || "");
 	}, [path1]);
 
-	useEffect(() => {
-		const handleResize = (e: any) => {
-			setHeight(window.innerHeight);
-		};
-
-		window.addEventListener("resize", handleResize);
-
-		return () => window.removeEventListener("resize", handleResize);
-	}, []);
 	return (
 		<AppSideBarContext.Provider value={{ selected, setSelected }}>
 			{/* <Box
@@ -111,7 +101,7 @@ const AppSideBar: FC = () => {
 						backgroundColor: colors.primary[400],
 					},
 					borderColor: colors.primary[900],
-					height: `${height}px`,
+					height: '100vh',
 					position: "sticky",
 					top: 0,
 				}}
