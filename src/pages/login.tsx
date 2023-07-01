@@ -1,19 +1,26 @@
 import { useTheme } from "@emotion/react";
-import { Box, Button, Typography } from "@mui/material";
-import { FC, useContext, useEffect, useMemo } from "react";
+import {
+	Box,
+	Button,
+	Typography,
+} from "@mui/material";
+import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import AppNavBar from "../components/AppNavBar/AppNavBar";
 import { AuthContext } from "../contexts/auth";
 import { NetworkContext } from "../contexts/network";
 import { tokens } from "../contexts/theme";
+import { useDispatch } from "react-redux";
+import { SET_LOADING } from "../state/reducer/globalState";
 
 const LoginPage: FC = () => {
 	const theme: any = useTheme();
 	const colors = useMemo(() => tokens(theme.palette.mode), [theme]);
-	const { account, setAccount, ethLogin } = useContext(AuthContext);
+	const { account, setAccount, ethLogin, zkGateLogin } =
+		useContext(AuthContext);
 	const navigate = useNavigate();
 	const { fuel } = useContext(NetworkContext);
-
+	const dispatch = useDispatch();
 	useEffect(() => {
 		if (account?.code) {
 			navigate("/mycourses");
@@ -67,7 +74,7 @@ const LoginPage: FC = () => {
 								Connect a Wallet
 							</Typography>
 						</Box>
-						<Button
+						{/* <Button
 							fullWidth
 							sx={{
 								"&:hover": {
@@ -89,9 +96,9 @@ const LoginPage: FC = () => {
 							<Typography color={colors.grey[100]}>
 								Metamask
 							</Typography>
-						</Button>
+						</Button> */}
 
-						<Button
+						{/* <Button
 							fullWidth
 							sx={{
 								"&:hover": {
@@ -119,10 +126,53 @@ const LoginPage: FC = () => {
 									fuel wallet not connected
 								</Typography>
 							)}
+						</Button> */}
+
+						<Button
+							fullWidth
+							sx={{
+								"&:hover": {
+									backgroundColor: colors.blueAccent[800],
+								},
+								display: "flex",
+								alignItems: "center",
+								margin: "40px 0 0 0",
+								padding: "10px 20px 10px 20px",
+								borderRadius: "10px",
+							}}
+							onClick={async () => {
+								dispatch({
+									type: SET_LOADING,
+									payload: {
+										loading: true,
+									},
+								});
+								try {
+									await ethLogin().then(zkGateLogin);
+								} catch (error) {
+									console.log(error);
+								}
+								dispatch({
+									type: SET_LOADING,
+									payload: {
+										loading: false,
+									},
+								});
+							}}
+						>
+							<img
+								src={`${process.env.PUBLIC_URL}/asset/zk-gate.png`}
+								height="40px"
+								width="40px"
+							/>
+							<Typography color={colors.grey[100]}>
+								zk-GATE
+							</Typography>
 						</Button>
 					</Box>
 				</Box>
 			</Box>
+			
 		</main>
 	);
 };

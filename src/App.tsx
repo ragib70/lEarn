@@ -30,7 +30,10 @@ import MyCoursesPage from "./pages/mycourses";
 import FuelTest from "./components/FuelTest";
 import { SET_LOADING, SET_NOTIF } from "./state/reducer/globalState";
 import OverlayLoader from "./components/OverlayLoader";
-import { transformFuelResponse, transformMetamaskResponse } from "./methods/transformer";
+import {
+	transformFuelResponse,
+	transformMetamaskResponse,
+} from "./methods/transformer";
 
 export const userData: any[] = require("./userData.json");
 export const courses: any[] = require("./courses.json");
@@ -69,7 +72,7 @@ function App() {
 											/>
 										</Routes>
 									</BrowserRouter>
-                                    <OverlayLoader />
+									<OverlayLoader />
 									<AppNotification />
 								</PageContextProvider>
 							</AuthProvider>
@@ -88,86 +91,92 @@ const Main = () => {
 	const navigate = useNavigate();
 	const { path1 } = useParams();
 	const dispatch = useDispatch();
-    const {userDataQuery, setUserDataQuery} = useContext(PageContext);
+	const { userDataQuery, setUserDataQuery } = useContext(PageContext);
 
 	useEffect(() => {
 		if (!account?.code) {
 			setContract(undefined);
 			setWallet(undefined);
-            dispatch({
-                type: SET_USER_DATA,
-                payload: {
-                    courses: [],
-                    progressStatus: {}
-                }
-            })
+			dispatch({
+				type: SET_USER_DATA,
+				payload: {
+					courses: [],
+					progressStatus: {},
+				},
+			});
+			dispatch({
+				type: SET_LOADING,
+				payload: {
+					loading: false,
+				},
+			});
 			navigate("/login");
 			return;
 		}
 	}, [account]);
 
-    useEffect(() => {
-        if (userDataQuery.loading){
-            dispatch({
-                type: SET_LOADING,
-                payload: {
-                    loading: true
-                }
-            })
-        }else{
-            dispatch({
-                type: SET_LOADING,
-                payload: {
-                    loading: false
-                }
-            })
-        }
-    }, [userDataQuery])
-
-    const onUserDataCallFailure = (error: any) => {
-        dispatch({
-            type: SET_NOTIF,
-            payload: {
-                type: 'error',
-                text: error.message
-            }
-        })
-        setUserDataQuery({loading: false});
-    }
 	useEffect(() => {
-        dispatch({
-            type: SET_USER_DATA,
-            payload: {
-                courses: [],
-                progressStatus: {}
-            },
-        });
+		if (userDataQuery.loading) {
+			dispatch({
+				type: SET_LOADING,
+				payload: {
+					loading: true,
+				},
+			});
+		} else {
+			dispatch({
+				type: SET_LOADING,
+				payload: {
+					loading: false,
+				},
+			});
+		}
+	}, [userDataQuery]);
+
+	const onUserDataCallFailure = (error: any) => {
+		dispatch({
+			type: SET_NOTIF,
+			payload: {
+				type: "error",
+				text: error.message,
+			},
+		});
+		setUserDataQuery({ loading: false });
+	};
+	useEffect(() => {
+		dispatch({
+			type: SET_USER_DATA,
+			payload: {
+				courses: [],
+				progressStatus: {},
+			},
+		});
 		if (wallet?.provider === "fuel" && contract && !userDataQuery.loading) {
-            setUserDataQuery({loading: true});
+			setUserDataQuery({ loading: true });
 			contract.functions
 				.get_user_data()
 				.txParams({ gasPrice: 1 })
 				.call()
 				.then((res: any) => {
-                    // console.log(res);
-                    dispatch({
+					// console.log(res);
+					dispatch({
 						type: SET_USER_DATA,
 						payload: {
-							...transformFuelResponse(res.value)
+							...transformFuelResponse(res.value),
 						},
 					});
-                    dispatch({
-                        type: SET_NOTIF,
-                        payload: {
-                            type: 'info',
-                            text: "User data loaded"
-                        }
-                    })
-                    setUserDataQuery({loading: false});
-                })
-                .catch(onUserDataCallFailure);
+					dispatch({
+						type: SET_NOTIF,
+						payload: {
+							type: "info",
+							text: "User data loaded",
+						},
+					});
+					setUserDataQuery({ loading: false });
+				})
+				.catch(onUserDataCallFailure);
 		} else if (wallet?.provider === "metamask" && contract) {
-            setUserDataQuery({loading: true});
+			setUserDataQuery({ loading: true });
 			contract?.methods
 				.getUserData()
 				.call({
@@ -177,26 +186,26 @@ const Main = () => {
 					dispatch({
 						type: SET_USER_DATA,
 						payload: {
-							...transformMetamaskResponse(res)
+							...transformMetamaskResponse(res),
 						},
 					});
-                    dispatch({
-                        type: SET_NOTIF,
-                        payload: {
-                            type: 'info',
-                            text: "User data loaded"
-                        }
-                    })
-                    setUserDataQuery({loading: false});
+					dispatch({
+						type: SET_NOTIF,
+						payload: {
+							type: "info",
+							text: "User data loaded",
+						},
+					});
+					setUserDataQuery({ loading: false });
 				})
-                .catch(onUserDataCallFailure);
+				.catch(onUserDataCallFailure);
 		}
 	}, [contract, wallet]);
 
 	return (
 		<main className="content">
 			<AppNavBar search profile />
-			{(
+			{
 				<>
 					{path1 === "app" ? (
 						<HomePage />
@@ -215,7 +224,7 @@ const Main = () => {
 					)}
 					<PushChatSupport />
 				</>
-			)}
+			}
 			{/* {wallet?.provider === "fuel" && <FuelTest />} */}
 		</main>
 	);
