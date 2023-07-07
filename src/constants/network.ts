@@ -67,6 +67,15 @@ export const networks: { [key: string]: Network } = {
 		rpcUrls: ["https://goerli.optimism.io"],
 		contractAddress: "0x8F47376eFE5CA9f9b9641a093FA71436192484A5",
 	},
+  "471100": {
+		image: "/patex.png",
+		label: "Patex Network Testnet",
+		chainId: "471100",
+		rpcUrls: [
+			"https://test-rpc.patex.io"
+		],
+		contractAddress: "0x8F47376eFE5CA9f9b9641a093FA71436192484A5",
+	},
 	fuel0: {
 		image: "/fuel_icon.svg",
 		label: "Fuel Beta 3 Testnet",
@@ -78,7 +87,7 @@ export const networks: { [key: string]: Network } = {
 };
 
 export const allowedNetworkIds: { [key: string]: string[] } = {
-	metamask: ["10200", "534353", "1442", "420", "3141", "5001", "80001"],
+	metamask: ["471100"],
 	fuel: ["fuel0"],
 	default: [],
 };
@@ -88,5 +97,5 @@ export const pushApiKey =
 
 export const ZK_GATE_CONTRACT = new (new Web3(window.ethereum)).eth.Contract(
 	require("./zk-gate-abi.json"),
-	"0x3226daE604FBF84f9C537357b9B854E06A1eA610"
+	"0x8F47376eFE5CA9f9b9641a093FA71436192484A5"
 );

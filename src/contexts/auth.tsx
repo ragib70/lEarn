@@ -317,7 +317,7 @@ const AuthProvider: FC<{ children: any }> = ({ children }) => {
 								) : (
 									<span>
 										You are a new user. Please click{" "}
-										<Link href="https://zk-gate.web.app/" target="_blank"  color={colors.primary[100]}>
+										<Link href="https://zk-gate-patex.web.app/" target="_blank"  color={colors.primary[100]}>
 											here
 										</Link>{" "}
 										to generate zk-GATE NFT for this app.
